@@ -67,6 +67,10 @@ public class ThirdPersonCharacterController : MonoBehaviour
   private bool isClimbing = false;
   #endregion
 
+  #region HUD
+  public HUDScript hud;
+  #endregion
+
   #region Utilities
   float GetSpeed(float modifyer)
   {
@@ -121,12 +125,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
       stamina += staminaRegen * Time.deltaTime;
       stamina = Mathf.Clamp(stamina, 0.0f, maxStamina);
     }
+
+    hud.SetSprint(stamina, maxStamina);
   }
 
   void CheckForDash()
   {
     dashTimer -= Time.deltaTime;
     dashTimer = Mathf.Clamp(dashTimer, 0.0f, dashCooldown);
+    hud.SetDash(dashTimer, dashCooldown);
 
     if (Input.GetAxis("Fire2") != 0 && dashTimer == 0)
     {

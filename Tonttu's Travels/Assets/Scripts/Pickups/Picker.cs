@@ -3,9 +3,11 @@
 public class Picker : MonoBehaviour
 {
     ThirdPersonCharacterController player;
+    HUDScript hud;
 
     private void Start() {
         player = GetComponent<ThirdPersonCharacterController>();
+        hud = player.hud;
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -13,7 +15,7 @@ public class Picker : MonoBehaviour
 
         if (pickupTag == "Pickup") {
             IPickable pickable = other.gameObject.GetComponent<IPickable>();
-            pickable.Pick(player);
+            pickable.Pick(player, hud);
         }
     }
 }

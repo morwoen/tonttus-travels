@@ -1,4 +1,4 @@
 ﻿public interface IPickable
 {
-    void Pick(ThirdPersonCharacterController player);
+    void Pick(ThirdPersonCharacterController player, HUDScript hud);
 }
