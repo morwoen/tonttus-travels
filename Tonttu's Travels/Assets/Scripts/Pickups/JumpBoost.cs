@@ -9,7 +9,7 @@ public class JumpBoost : MonoBehaviour, IPickable
 
   public GameObject pickupModel;
 
-  float previousJumpForce;
+  public float previousJumpForce;
 
   IEnumerator JumpBoostLife(ThirdPersonCharacterController player, HUDScript hud) {
     previousJumpForce = player.jumpSpeed;
