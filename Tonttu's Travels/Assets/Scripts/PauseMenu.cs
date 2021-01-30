@@ -10,7 +10,7 @@ public class PauseMenu : MonoBehaviour
         initialTimeScale = Time.timeScale;
     }
 
-    private void Update() {
+    void Update() {
         bool pauseButtonPressed = Input.GetAxis("Menu") != 0;
 
         if (pauseButtonPressed && !isPaused) {
