@@ -59,6 +59,13 @@ public class ThirdPersonCharacterController : MonoBehaviour
   private bool usingStealthAxis = false;
   #endregion
 
+  #region Climbing
+  public float climbingSpeed = 2.0f;
+  public float dismountSpeed = 1.0f;
+
+  private bool isClimbing = false;
+  #endregion
+
   #region Utilities
   float GetSpeed(float modifyer)
   {
@@ -83,7 +90,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
     jumpTimer -= Time.deltaTime;
     jumpTimer = Mathf.Clamp(jumpTimer, 0.0f, jumpCooldown);
 
-    if ((onGround || currentJump < maxJumps) && Input.GetAxis("Jump") != 0 && jumpTimer == 0)
+    if ((onGround || isClimbing || currentJump < maxJumps) && Input.GetAxis("Jump") != 0 && jumpTimer == 0)
     {
       isJumping = true;
       currentJump++;
@@ -198,6 +205,23 @@ public class ThirdPersonCharacterController : MonoBehaviour
       Invoke("StopDashVelocity", dashDuration * Time.fixedDeltaTime);
     }
   }
+
+  void HandleClimbing()
+  {
+    rb.useGravity = false;
+    rb.velocity = Vector3.zero;
+    Vector3 direction = new Vector3(0.0f, ver, 0.0f).normalized;
+    rb.MovePosition(transform.position + direction * climbingSpeed * Time.fixedDeltaTime);
+
+    if (isJumping)
+    {
+      rb.useGravity = true;
+      rb.AddForce(-transform.forward * GetSpeed(glidingSpeed), ForceMode.Impulse);
+      rb.AddForce(Vector3.up * dismountSpeed, ForceMode.Impulse);
+      isJumping = false;
+      isClimbing = false;
+    }
+  }
   #endregion
 
   void OnCollisionEnter(Collision collision)
@@ -206,6 +230,29 @@ public class ThirdPersonCharacterController : MonoBehaviour
     {
       onGround = true;
       currentJump = 0;
+    }
+  }
+
+  void OnTriggerEnter(Collider collider)
+  {
+    if (collider.gameObject.CompareTag("rope") && !isClimbing)
+    {
+      Vector3 direction = collider.gameObject.transform.position;
+      direction.y = transform.position.y;
+      transform.LookAt(direction);
+
+      isClimbing = true;
+      onGround = false;
+      currentJump = 0;
+    }
+  }
+
+  void OnTriggerExit(Collider collider)
+  {
+    if (collider.gameObject.CompareTag("rope"))
+    {
+      isClimbing = false;
+      rb.useGravity = true;
     }
   }
 
@@ -227,8 +274,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void FixedUpdate()
   {
-    HandleMovement();
-    HandleJump();
-    HandleDash();
+    if (!isClimbing)
+    {
+      HandleMovement();
+      HandleJump();
+      HandleDash();
+    }
+    else
+    {
+      HandleClimbing();
+    }
   }
 }

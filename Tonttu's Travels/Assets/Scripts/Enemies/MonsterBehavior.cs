@@ -7,10 +7,12 @@ public class MonsterBehavior : MonoBehaviour
 {
 
     public float distanceToHunt = 10f;
+    public float distanceToKill = 2f;
 
     public GameObject player;
     NavMeshAgent agent;
-    public PatrolScript patrol;
+    private PatrolScript patrol;
+    public PlayerCheckpoint checkpoint;
 
      void Start()
     {
@@ -30,10 +32,17 @@ public class MonsterBehavior : MonoBehaviour
             if (distance >= distanceToHunt)
             {
                 print("here");
+
                 patrol.GotoNextPoint();
             }
         }
 
+
+        if (distance <= distanceToKill)
+        {
+            
+            checkpoint.LoadCheckpoint();
+        }
         
 
     }
