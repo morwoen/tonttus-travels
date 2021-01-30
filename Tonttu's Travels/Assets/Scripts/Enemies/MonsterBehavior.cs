@@ -6,47 +6,42 @@ using UnityEngine.AI;
 public class MonsterBehavior : MonoBehaviour
 {
 
-    public float distanceToHunt = 10f;
-    public float distanceToKill = 2f;
+  public GameObject player;
+  public float distanceToKill = 2f;
+  public float distanceToHunt = 10f;
 
-    public GameObject player;
-    NavMeshAgent agent;
-    private PatrolScript patrol;
-    public PlayerCheckpoint checkpoint;
+  private Animator animator;
+  private NavMeshAgent agent;
+  private PatrolScript patrol;
+  private bool isChasing = false;
 
-     void Start()
+  void Start()
+  {
+    agent = GetComponent<NavMeshAgent>();
+    animator = GetComponentInChildren<Animator>();
+    patrol = GetComponent<PatrolScript>();
+  }
+
+  void Update()
+  {
+    float distance = Vector3.Distance(player.transform.position, transform.position);
+
+    if (distance <= distanceToHunt)
     {
-       
-        agent = GetComponent<NavMeshAgent>();
+      animator.SetBool("Alert", true);
+      agent.SetDestination(player.transform.position);
+      isChasing = true;
     }
 
-     void Update()
+    if (isChasing && distance > distanceToHunt)
     {
-
-        float distance = Vector3.Distance(player.transform.position, transform.position);
-
-        if (distance <= distanceToHunt)
-        {
-            
-            agent.SetDestination(player.transform.position);
-            if (distance >= distanceToHunt)
-            {
-                print("here");
-
-                patrol.GotoNextPoint();
-            }
-        }
-
-
-        if (distance <= distanceToKill)
-        {
-            
-            checkpoint.LoadCheckpoint();
-        }
-        
-
+      animator.SetBool("Alert", false);
+      patrol.GotoNextPoint();
     }
 
-
-
+    if (distance <= distanceToKill)
+    {
+      player.GetComponent<PlayerCheckpoint>().LoadCheckpoint();
+    }
+  }
 }
