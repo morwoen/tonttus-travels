@@ -7,6 +7,7 @@ TagManager:
   - checkpoint
   - deadzone
   - ground
+  - rope
   - Pickup
   layers:
   - Default
