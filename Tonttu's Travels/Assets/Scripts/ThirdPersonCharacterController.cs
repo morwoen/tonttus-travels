@@ -47,7 +47,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   public float dashSpeed = 8.0f;
   public float dashCooldown = 3.0f;
   public float dashDuration = 10.0f;
-  
+
   private float dashTimer = 0.0f;
   private bool isDashing = false;
   #endregion
@@ -56,6 +56,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   public float stealthSpeed = 1.5f;
 
   private bool isInStealth = false;
+  private bool usingStealthAxis = false;
   #endregion
 
   #region Utilities
@@ -82,7 +83,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
     jumpTimer -= Time.deltaTime;
     jumpTimer = Mathf.Clamp(jumpTimer, 0.0f, jumpCooldown);
 
-    if ((onGround || currentJump < maxJumps) && Input.GetAxis("Jump") > 0 && jumpTimer == 0)
+    if ((onGround || currentJump < maxJumps) && Input.GetAxis("Jump") != 0 && jumpTimer == 0)
     {
       isJumping = true;
       currentJump++;
@@ -92,7 +93,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void CheckForSprint()
   {
-    if (stamina > 0 && Input.GetKeyDown(KeyCode.LeftShift))
+    if (stamina > 0 && Input.GetAxis("Fire1") != 0)
     {
       isSprinting = true;
       isInStealth = false;
@@ -119,7 +120,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
     dashTimer -= Time.deltaTime;
     dashTimer = Mathf.Clamp(dashTimer, 0.0f, dashCooldown);
 
-    if (Input.GetKeyDown(KeyCode.E) && dashTimer == 0)
+    if (Input.GetAxis("Fire2") != 0 && dashTimer == 0)
     {
       isDashing = true;
       isInStealth = false;
@@ -129,9 +130,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void CheckForStealth()
   {
-    if (Input.GetKeyDown(KeyCode.LeftControl))
+    if (Input.GetAxis("Fire3") != 0 && !usingStealthAxis)
     {
       isInStealth = !isInStealth;
+      usingStealthAxis = true;
+    }
+
+    if (Input.GetAxis("Fire3") == 0)
+    {
+      usingStealthAxis = false;
     }
   }
   #endregion
