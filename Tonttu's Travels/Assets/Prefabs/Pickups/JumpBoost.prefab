@@ -124,9 +124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28f495890177614449968d11420ada26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 3
-  playerJumpBoostAmount: 3
-  respawnTimeInSeconds: 5
+  duration: 10
+  playerJumpBoostAmount: 10
+  respawnTimeInSeconds: 10
   pickupModel: {fileID: 727005354}
 --- !u!136 &438406994
 CapsuleCollider:
