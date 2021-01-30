@@ -4,6 +4,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
 {
   public GameObject cam;
 
+  private Animator animator;
   private Rigidbody rb;
 
   #region IO
@@ -62,8 +63,14 @@ public class ThirdPersonCharacterController : MonoBehaviour
   #region Climbing
   public float climbingSpeed = 2.0f;
   public float dismountSpeed = 1.0f;
+  public float ropeTurnSpeed = 200.0f;
 
   private bool isClimbing = false;
+  private Transform rope = null;
+  #endregion
+
+  #region HUD
+  public HUDScript hud;
   #endregion
 
   #region Utilities
@@ -120,12 +127,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
       stamina += staminaRegen * Time.deltaTime;
       stamina = Mathf.Clamp(stamina, 0.0f, maxStamina);
     }
+
+    hud.SetSprint(stamina, maxStamina);
   }
 
   void CheckForDash()
   {
     dashTimer -= Time.deltaTime;
     dashTimer = Mathf.Clamp(dashTimer, 0.0f, dashCooldown);
+    hud.SetDash(dashTimer, dashCooldown);
 
     if (Input.GetAxis("Fire2") != 0 && dashTimer == 0)
     {
@@ -166,6 +176,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
       if (isSprinting)
       {
         speed = GetSpeed(sprintSpeed);
+        animator.SetFloat("Locomotion", 1.0f);
       }
       else if (isInStealth)
       {
@@ -178,10 +189,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
       else
       {
         speed = GetSpeed(movementSpeed);
+        animator.SetFloat("Locomotion", 0.5f);
       }
 
       Vector3 moveDir = Quaternion.Euler(0f, inputAngle, 0f) * Vector3.forward;
       rb.MovePosition(transform.position + moveDir.normalized * speed * Time.fixedDeltaTime);
+    }
+    else
+    {
+      animator.SetFloat("Locomotion", 0.0f);
     }
   }
 
@@ -189,6 +205,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (isJumping)
     {
+      animator.SetTrigger("Jump");
       isJumping = false;
       float speed = onGround ? jumpSpeed : airJumpSpeed;
       rb.AddForce(Vector3.up * speed, ForceMode.Impulse);
@@ -211,7 +228,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
     rb.useGravity = false;
     rb.velocity = Vector3.zero;
     Vector3 direction = new Vector3(0.0f, ver, 0.0f).normalized;
-    rb.MovePosition(transform.position + direction * climbingSpeed * Time.fixedDeltaTime);
+    var verticalMovement = transform.position + direction * climbingSpeed * Time.fixedDeltaTime;
+
+    Quaternion q = Quaternion.AngleAxis(-hor * ropeTurnSpeed * Time.fixedDeltaTime, Vector3.up);
+    var horizontalMovement = q * (rb.transform.position - rope.transform.position) + rope.transform.position;
+
+    horizontalMovement.y = verticalMovement.y;
+
+    rb.MovePosition(horizontalMovement);
+    rb.MoveRotation(rb.transform.rotation * q);
 
     if (isJumping)
     {
@@ -233,10 +258,27 @@ public class ThirdPersonCharacterController : MonoBehaviour
     }
   }
 
+  void OnCollisionStay(Collision collision)
+  {
+    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    {
+      animator.SetBool("isFalling", false);
+    }
+  }
+
+  void OnCollisionExit(Collision collision)
+  {
+    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    {
+      animator.SetBool("isFalling", true);
+    }
+  }
+
   void OnTriggerEnter(Collider collider)
   {
     if (collider.gameObject.CompareTag("rope") && !isClimbing)
     {
+      rope = collider.gameObject.transform;
       Vector3 direction = collider.gameObject.transform.position;
       direction.y = transform.position.y;
       transform.LookAt(direction);
@@ -251,6 +293,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (collider.gameObject.CompareTag("rope"))
     {
+      rope = null;
       isClimbing = false;
       rb.useGravity = true;
     }
@@ -259,6 +302,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   void Start()
   {
     rb = GetComponentInChildren<Rigidbody>();
+    animator = GetComponentInChildren<Animator>();
     Cursor.lockState = CursorLockMode.Locked;
     Cursor.visible = false;
   }
