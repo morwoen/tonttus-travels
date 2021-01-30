@@ -46,19 +46,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c662213e476235408c0cf01cad924c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardSpeed: 13
-  sprintSpeed: 16
-  backwardSpeed: 10
-  dashTime: 2
-  DashSpeed: 10
-  jumpSpeed: 8
-  turnTime: 0.1
-  dashCountdownTime: 6
-  Stamina: 6
-  MaxStamina: 6
   cam: {fileID: 0}
-  playerShot: {fileID: 0}
-  playerHit: 0
+  deadzone: 0.1
+  turnTime: 0.1
+  glidingSpeed: 1.5
+  movementSpeed: 3
+  maxJumps: 2
+  jumpSpeed: 8
+  airJumpSpeed: 3
+  jumpCooldown: 0.3
+  maxStamina: 5
+  sprintSpeed: 16
+  staminaDrain: 3
+  staminaRegen: 1
+  dashSpeed: 8
+  dashCooldown: 3
+  dashDuration: 10
+  stealthSpeed: 1.5
+  climbingSpeed: 2
+  dismountSpeed: 10
 --- !u!54 &3795498423884485941
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -86,7 +92,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 2.05
+  m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3795498424229359658
