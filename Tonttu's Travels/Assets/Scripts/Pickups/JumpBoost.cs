@@ -2,27 +2,30 @@
 using UnityEngine;
 
 public class JumpBoost : MonoBehaviour, IPickable {
-    public float duration;
-    public float playerJumpBoostAmount;
+    public float duration = 3f;
+    public float playerJumpBoostAmount = 3f;
+    public float respawnTimeInSeconds = 5f;
+
+    public GameObject pickupModel;
 
     float previousJumpForce;
 
     IEnumerator JumpBoostLife(ThirdPersonCharacterController player) {
-        OnPickupDestroy();
+        previousJumpForce = player.jumpSpeed;
+        player.jumpSpeed += playerJumpBoostAmount;
+        
         yield return new WaitForSeconds(duration);
         player.jumpSpeed = previousJumpForce;
     }
 
-    public void Pick(ThirdPersonCharacterController player) {
-        previousJumpForce = player.jumpSpeed;
-
-        player.jumpSpeed += playerJumpBoostAmount;
-        StartCoroutine(JumpBoostLife(player));
+    IEnumerator PickMe() {
+        pickupModel.SetActive(false);
+        yield return new WaitForSeconds(respawnTimeInSeconds);
+        pickupModel.SetActive(true);
     }
 
-    public void OnPickupDestroy() {
-        gameObject.GetComponent<MeshRenderer>().enabled = false;
-        gameObject.GetComponent<Collider>().enabled = false;
-        Destroy(gameObject, duration + 1);
+    public void Pick(ThirdPersonCharacterController player) {
+        StartCoroutine(JumpBoostLife(player));
+        StartCoroutine(PickMe());
     }
 }
