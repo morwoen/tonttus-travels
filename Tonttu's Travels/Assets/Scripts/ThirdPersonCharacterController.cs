@@ -189,7 +189,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (isJumping)
     {
-      animator.SetBool("Jump", true);
+      animator.SetTrigger("Jump");
       isJumping = false;
       float speed = onGround ? jumpSpeed : airJumpSpeed;
       rb.AddForce(Vector3.up * speed, ForceMode.Impulse);
