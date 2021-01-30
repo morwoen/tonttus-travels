@@ -1,294 +1,227 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-//using UnityEngine.Rendering.PostProcessing;
-//using UnityEngine.Audio;
+﻿using UnityEngine;
 
 public class ThirdPersonCharacterController : MonoBehaviour
 {
+  public GameObject cam;
 
-    public float forwardSpeed = 7;
-    public float sprintSpeed = 12;
-    public float backwardSpeed = 4;
-    private float internalSpeed = 4;
-    public float dashTime = 2;
-    public float DashSpeed = 2;
-    public float jumpSpeed = 5;
-    public float turnTime = 0.1f;
-    private Rigidbody rb;
-    private bool onGround = true;
-    private const int MAX_JUMP = 2;
-    private int currentJump = 0;
-    private bool DashOnCooldown = false;
-    public float dashCountdownTime = 6;
-    private float dashCurrentCountdown = 6;
-    //public Animator animator;
-    //public GameObject stealthVisualEffect;
-    private bool isSprinting = false;
-    public float Stamina = 6;
-    public float MaxStamina = 6;
-    //public GameObject dashIcon;
-    //public GameObject focusVisionIcon;
-    //public GameObject sprintIcon;
+  private Rigidbody rb;
 
-    //public bool StealthActive = false;
-    bool walkingBackwards = false;
-    private bool applyJumpForce = false;
+  #region IO
+  private float hor;
+  private float ver;
+  #endregion
 
-    public GameObject cam;
+  #region Movement
+  public float deadzone = 0.1f;
+  public float turnTime = 0.1f;
+  public float glidingSpeed = 1.5f;
+  public float movementSpeed = 3.0f;
 
-    //public PostProcessVolume volume;
+  private float turnSmoothVelocity;
+  private float internalSpeed = 4.0f;
+  #endregion
 
-    //public float Vison = 6;
-   // public bool visonCooldown = false;
+  #region Jumping
+  public int maxJumps = 2;
+  public float jumpSpeed = 6.0f;
+  public float airJumpSpeed = 3.0f;
+  public float jumpCooldown = 0.3f;
 
-    public GameObject playerShot;
-    public bool playerHit;
-    //public AudioSource Alert;
+  private int currentJump = 0;
+  private bool onGround = true;
+  private bool isJumping = false;
+  private float jumpTimer = 0.0f;
+  #endregion
 
-    private float turnSmoothVelocity;
+  #region Sprinting
+  public float maxStamina = 5.0f;
+  public float sprintSpeed = 6.0f;
+  public float staminaDrain = 3.0f;
+  public float staminaRegen = 1.0f;
 
-    // Start is called before the first frame update
-    void Start()
+  private float stamina = 0.0f;
+  private bool isSprinting = false;
+  #endregion
+
+  #region Dashing
+  public float dashSpeed = 8.0f;
+  public float dashCooldown = 3.0f;
+  public float dashDuration = 10.0f;
+  
+  private float dashTimer = 0.0f;
+  private bool isDashing = false;
+  #endregion
+
+  #region Stealth
+  public float stealthSpeed = 1.5f;
+
+  private bool isInStealth = false;
+  #endregion
+
+  #region Utilities
+  float GetSpeed(float modifyer)
+  {
+    return internalSpeed * modifyer;
+  }
+
+  void StopDashVelocity()
+  {
+    rb.velocity = Vector3.zero;
+  }
+  #endregion
+
+  #region Action Checks
+  void CheckForMovement()
+  {
+    hor = Input.GetAxisRaw("Horizontal");
+    ver = Input.GetAxisRaw("Vertical");
+  }
+
+  void CheckForJump()
+  {
+    jumpTimer -= Time.deltaTime;
+    jumpTimer = Mathf.Clamp(jumpTimer, 0.0f, jumpCooldown);
+
+    if ((onGround || currentJump < maxJumps) && Input.GetAxis("Jump") > 0 && jumpTimer == 0)
     {
-        dashCurrentCountdown = dashCountdownTime;
-        rb = GetComponentInChildren<Rigidbody>();
-        //animator = this.GetComponent<Animator>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        //volume = GameObject.FindGameObjectWithTag("Camera").GetComponent<PostProcessVolume>();
-        //Alert = GameObject.FindGameObjectWithTag("Alert").GetComponent<AudioSource>();
-        //dashIcon.SetActive(true);
-        //focusVisionIcon.SetActive(true);
-        //sprintIcon.SetActive(true);
-        //
+      isJumping = true;
+      currentJump++;
+      jumpTimer = jumpCooldown;
+    }
+  }
+
+  void CheckForSprint()
+  {
+    if (stamina > 0 && Input.GetKeyDown(KeyCode.LeftShift))
+    {
+      isSprinting = true;
+      isInStealth = false;
+    }
+    else
+    {
+      isSprinting = false;
     }
 
-    public void StopDashVelocity()
+    if (isSprinting)
     {
-        rb.velocity = Vector3.zero;
-        Debug.Log("Dashed");
+      stamina -= staminaDrain * Time.deltaTime;
+      stamina = Mathf.Clamp(stamina, 0.0f, maxStamina);
     }
-
-    // Update is called once per frame
-    void Update()
+    else
     {
-        if(playerHit == true)
-        {
-            playerShot.SetActive(true);
-        }
-
-        //if (GameManager.isPaused)
-        //{
-        //    return;
-        //}
-
-        PlayerMovement();
-        //Animations();
-
-        if (Input.GetKeyDown("e") && Input.GetKey("w"))
-        {
-            Debug.Log("keydown");
-
-
-            if (DashOnCooldown == false && onGround == true)
-            {
-                rb.AddForce (transform.forward * DashSpeed, ForceMode.Impulse);
-                dashCurrentCountdown = dashCountdownTime;
-                Invoke("StopDashVelocity", dashTime);
-
-                Debug.Log("Dashed");
-                //animator.SetTrigger("Dash");
-                //dashIcon.SetActive(false);
-
-            }
-        }
-
-        if (Input.GetKeyDown("e") && Input.GetKey("s"))
-        {
-            Debug.Log("keydown");
-
-
-            if (DashOnCooldown == false && onGround == true)
-            {
-                rb.AddForce(-transform.forward * DashSpeed, ForceMode.Impulse);
-                dashCurrentCountdown = dashCountdownTime;
-                Invoke("StopDashVelocity", dashTime);
-
-                Debug.Log("Dashed");
-                //animator.SetTrigger("Dash");
-                //dashIcon.SetActive(false);
-            }
-        }
-
-
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && (Stamina > 0))
-        {
-            internalSpeed = sprintSpeed;
-            isSprinting = true;
-            //sprintIcon.SetActive(false);
-
-            //animator.SetBool("Sprint", isSprinting);
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            internalSpeed = forwardSpeed;
-            isSprinting = false;
-
-            //animator.SetBool("Sprint",isSprinting = false);
-        }
-
-        if (dashCurrentCountdown <= 0)
-        {
-            DashOnCooldown = false;
-            //dashIcon.SetActive(true);
-        }
-        else
-        {
-            dashCurrentCountdown -= Time.deltaTime;
-            DashOnCooldown = true;
-        }
-
-        if (isSprinting == true)
-        {
-            Stamina -= Time.deltaTime;
-            
-        }
-        else
-        {
-            Stamina += Time.deltaTime;
-        }
-
-        if (Stamina > MaxStamina)
-        {
-            Stamina = MaxStamina;
-            //sprintIcon.SetActive(true);
-        }
-
-        if(Stamina < 0)
-        {
-            internalSpeed = forwardSpeed;
-            isSprinting = false;
-            //sprintIcon.SetActive(true);
-        }
-        
-
-
-       // print(DashCooldownTime);
-
-        //if(Input.GetKeyDown(KeyCode.C)) 
-        //{
-        //    StealthActive = !StealthActive;
-        //    //if (stealthVisualEffect != null)
-        //        //stealthVisualEffect.SetActive(StealthActive);
-        //}
-
-       
-        //if(StealthActive == true)
-        //{
-        //    Speed = 2;
-        //}
-
-        if(walkingBackwards)
-        {
-            internalSpeed = backwardSpeed;
-        }
-        else if (!Input.GetKey(KeyCode.LeftShift) && Input.GetKey("w"))
-        {
-            internalSpeed = forwardSpeed;
-        }
-
-        CheckForJump();
+      stamina += staminaRegen * Time.deltaTime;
+      stamina = Mathf.Clamp(stamina, 0.0f, maxStamina);
     }
+  }
 
-    void CheckForJump()
+  void CheckForDash()
+  {
+    dashTimer -= Time.deltaTime;
+    dashTimer = Mathf.Clamp(dashTimer, 0.0f, dashCooldown);
+
+    if (Input.GetKeyDown(KeyCode.E) && dashTimer == 0)
     {
-        if (Input.GetKeyDown("space") && (onGround || MAX_JUMP > currentJump))
-        {
-            applyJumpForce = true;
-            onGround = false;
-
-            if (currentJump < MAX_JUMP && currentJump > 0)
-            {
-                //animator.SetBool("Double Jump", true);
-            }
-            
-            currentJump++;
-
-        }
-        if (currentJump <= 1)
-        {
-            //animator.SetBool("Double Jump", false);
-        }
+      isDashing = true;
+      isInStealth = false;
+      dashTimer = dashCooldown;
     }
+  }
 
-    void FixedUpdate()
+  void CheckForStealth()
+  {
+    if (Input.GetKeyDown(KeyCode.LeftControl))
     {
-        if (applyJumpForce)
-        {
-            applyJumpForce = false;
-            rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
-        }
+      isInStealth = !isInStealth;
     }
+  }
+  #endregion
 
-    void PlayerMovement()
+  #region Action Handlers
+  void HandleMovement()
+  {
+    Vector3 inputDir = new Vector3(hor, 0f, ver).normalized;
+
+    if (inputDir.magnitude >= deadzone && !isDashing)
     {
-        float hor = Input.GetAxisRaw("Horizontal");
-        float ver = Input.GetAxisRaw("Vertical");
+      float inputAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+      float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, inputAngle, ref turnSmoothVelocity, turnTime);
 
-        if (ver < 0) walkingBackwards = true;
-        else walkingBackwards = false;
+      transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-        var inputDir = new Vector3(hor, 0f, ver).normalized;
-        if (inputDir.magnitude >= 0.1f) {
-            float inputAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, inputAngle, ref turnSmoothVelocity, turnTime);
+      float speed = onGround ? isSprinting ? GetSpeed(sprintSpeed) : GetSpeed(movementSpeed) : GetSpeed(glidingSpeed);
+      if (isSprinting)
+      {
+        speed = GetSpeed(sprintSpeed);
+      }
+      else if (isInStealth)
+      {
+        speed = GetSpeed(stealthSpeed);
+      }
+      else if (!onGround)
+      {
+        speed = GetSpeed(glidingSpeed);
+      }
+      else
+      {
+        speed = GetSpeed(movementSpeed);
+      }
 
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            Vector3 moveDir = Quaternion.Euler(0f, inputAngle, 0f) * Vector3.forward;
-            rb.MovePosition(transform.position + moveDir.normalized * internalSpeed * Time.deltaTime);
-        }
+      Vector3 moveDir = Quaternion.Euler(0f, inputAngle, 0f) * Vector3.forward;
+      rb.MovePosition(transform.position + moveDir.normalized * speed * Time.fixedDeltaTime);
     }
+  }
 
-    //void Animations()
-    //{
-
-    //    animator.SetBool("OnGround", onGround);
-    //    bool isMoving = (Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Horizontal") < 0  || Input.GetAxis("Vertical") > 0 || Input.GetAxis("Vertical") < 0);
-    //    animator.SetBool("isMoving", isMoving);
-
-    //    animator.SetFloat("VelX", Input.GetAxis("Horizontal"));
-    //    animator.SetFloat("VelY", Input.GetAxis("Vertical"));
-
-    //    animator.SetFloat("Speed", Speed);
-
-    //    animator.SetBool("Stealth", StealthActive);
-
-    //    /*
-    //    if(rb.velocity.x > 0)
-    //        animator.SetFloat("VelX", 1);
-    //    else if (rb.velocity.x < 0)
-    //        animator.SetFloat("VelX", -1);
-    //    else
-    //        animator.SetFloat("VelX", 0);
-
-    //    if (rb.velocity.z > 0)
-    //        animator.SetFloat("VelY", 1);
-    //    else if (rb.velocity.z < 0)
-    //        animator.SetFloat("VelY", -1);
-    //    else
-    //        animator.SetFloat("VelY", 0);
-    //        */
-    //}
-
-    void OnCollisionEnter(Collision collision)
+  void HandleJump()
+  {
+    if (isJumping)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            onGround = true;
-            currentJump = 0;
-        }
+      isJumping = false;
+      float speed = onGround ? jumpSpeed : airJumpSpeed;
+      rb.AddForce(Vector3.up * speed, ForceMode.Impulse);
+      onGround = false;
     }
+  }
+
+  void HandleDash()
+  {
+    if (isDashing)
+    {
+      isDashing = false;
+      rb.AddForce(transform.forward * GetSpeed(dashSpeed), ForceMode.Impulse);
+      Invoke("StopDashVelocity", dashDuration * Time.fixedDeltaTime);
+    }
+  }
+  #endregion
+
+  void OnCollisionEnter(Collision collision)
+  {
+    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    {
+      onGround = true;
+      currentJump = 0;
+    }
+  }
+
+  void Start()
+  {
+    rb = GetComponentInChildren<Rigidbody>();
+    Cursor.lockState = CursorLockMode.Locked;
+    Cursor.visible = false;
+  }
+
+  void Update()
+  {
+    CheckForMovement();
+    CheckForJump();
+    CheckForSprint();
+    CheckForDash();
+    CheckForStealth();
+  }
+
+  void FixedUpdate()
+  {
+    HandleMovement();
+    HandleJump();
+    HandleDash();
+  }
 }
