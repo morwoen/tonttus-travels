@@ -8,6 +8,7 @@ TagManager:
   - deadzone
   - ground
   - rope
+  - Pickup
   layers:
   - Default
   - TransparentFX
