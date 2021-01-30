@@ -8,7 +8,7 @@ public class Pickup : MonoBehaviour, IPickable {
         Destroy(gameObject, destroyAfterSeconds);
     }
 
-    public void Pick(ThirdPersonCharacterController player) {
+    public void Pick(ThirdPersonCharacterController player, HUDScript hud) {
         PlayerCollectables collectables = player.GetComponent<PlayerCollectables>();
 
         collectables.Add(amount);
