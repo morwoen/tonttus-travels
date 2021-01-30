@@ -2,22 +2,19 @@
 
 public class PauseMenu : MonoBehaviour
 {
-    // TODO: map to unity input
-    public KeyCode pauseKey;
     public GameObject pauseMenuPanel;
-
     private float initialTimeScale;
+    private bool isPaused = false;
 
     private void Start() {
         initialTimeScale = Time.timeScale;
     }
 
     private void Update() {
-        if (Input.GetKeyDown(pauseKey)) {
-            Time.timeScale = 0;
+        bool pauseButtonPressed = Input.GetAxis("Menu") != 0;
 
-            pauseMenuPanel.SetActive(true);
-            ToggleMouse(false);
+        if (pauseButtonPressed && !isPaused) {
+            PauseGame();
         }
     }
 
@@ -35,8 +32,18 @@ public class PauseMenu : MonoBehaviour
     public void ResumeGame() {
         Time.timeScale = initialTimeScale;
 
+        isPaused = false;
         pauseMenuPanel.SetActive(false);
         ToggleMouse(true);
+    }
+
+    public void PauseGame() {
+        Time.timeScale = 0;
+
+        isPaused = true;
+        pauseMenuPanel.SetActive(true);
+        ToggleMouse(false);
+        Input.ResetInputAxes();
     }
 
     public void LoadCheckpoint() {
