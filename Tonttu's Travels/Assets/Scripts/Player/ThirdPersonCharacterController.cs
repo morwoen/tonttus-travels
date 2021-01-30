@@ -63,8 +63,10 @@ public class ThirdPersonCharacterController : MonoBehaviour
   #region Climbing
   public float climbingSpeed = 2.0f;
   public float dismountSpeed = 1.0f;
+  public float ropeTurnSpeed = 200.0f;
 
   private bool isClimbing = false;
+  private Transform rope = null;
   #endregion
 
   #region HUD
@@ -226,7 +228,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
     rb.useGravity = false;
     rb.velocity = Vector3.zero;
     Vector3 direction = new Vector3(0.0f, ver, 0.0f).normalized;
-    rb.MovePosition(transform.position + direction * climbingSpeed * Time.fixedDeltaTime);
+    var verticalMovement = transform.position + direction * climbingSpeed * Time.fixedDeltaTime;
+
+    Quaternion q = Quaternion.AngleAxis(-hor * ropeTurnSpeed * Time.fixedDeltaTime, Vector3.up);
+    var horizontalMovement = q * (rb.transform.position - rope.transform.position) + rope.transform.position;
+
+    horizontalMovement.y = verticalMovement.y;
+
+    rb.MovePosition(horizontalMovement);
+    rb.MoveRotation(rb.transform.rotation * q);
 
     if (isJumping)
     {
@@ -268,6 +278,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (collider.gameObject.CompareTag("rope") && !isClimbing)
     {
+      rope = collider.gameObject.transform;
       Vector3 direction = collider.gameObject.transform.position;
       direction.y = transform.position.y;
       transform.LookAt(direction);
@@ -282,6 +293,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (collider.gameObject.CompareTag("rope"))
     {
+      rope = null;
       isClimbing = false;
       rb.useGravity = true;
     }
