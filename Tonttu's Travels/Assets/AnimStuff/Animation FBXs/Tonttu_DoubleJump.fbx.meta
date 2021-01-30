@@ -1,8 +1,11 @@
 fileFormatVersion: 2
-guid: 5586ff5c5351f7e4f99bc59cf54c41f4
+guid: c6bd196a7d5418347a354c3e9fa78528
 ModelImporter:
   serializedVersion: 19301
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      74: 373344647740410536
+    second: DoubleJump
   externalObjects: {}
   materials:
     materialImportMode: 1
