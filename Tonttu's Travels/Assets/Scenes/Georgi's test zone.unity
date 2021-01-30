@@ -423,8 +423,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 290482369}
-  m_LocalRotation: {x: 0.20661281, y: -0.000000032551412, z: 0.0000000068738575, w: 0.9784228}
-  m_LocalPosition: {x: 0, y: 9.964422, z: -17.995314}
+  m_LocalRotation: {x: 0.20661281, y: 0.00000003344224, z: -0.0000000070619732, w: 0.9784228}
+  m_LocalPosition: {x: 0, y: 8.734423, z: -17.995314}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1731,7 +1731,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1720565794}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 32838053e0ac6a042ad72b3412ee3c78, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -2126,7 +2126,7 @@ PrefabInstance:
     - target: {fileID: 2573633205084826340, guid: d15e635ca099f724794c824b25b85320,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 9.964422
+      value: 8.734423
       objectReference: {fileID: 0}
     - target: {fileID: 2573633205084826340, guid: d15e635ca099f724794c824b25b85320,
         type: 3}
@@ -2186,12 +2186,12 @@ PrefabInstance:
     - target: {fileID: 2573633205118865149, guid: d15e635ca099f724794c824b25b85320,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000016836404
+      value: 0.000000016836413
       objectReference: {fileID: 0}
     - target: {fileID: 2573633205118865149, guid: d15e635ca099f724794c824b25b85320,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000035489327
+      value: -0.0000000035489336
       objectReference: {fileID: 0}
     - target: {fileID: 2573633206340554060, guid: d15e635ca099f724794c824b25b85320,
         type: 3}
@@ -2212,11 +2212,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3795498423884485941, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3795498423884485944, guid: 24205f34db13693429867fc755a88a8c,
         type: 3}
       propertyPath: m_RootOrder
@@ -2230,7 +2225,7 @@ PrefabInstance:
     - target: {fileID: 3795498423884485944, guid: 24205f34db13693429867fc755a88a8c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.23
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3795498423884485944, guid: 24205f34db13693429867fc755a88a8c,
         type: 3}
@@ -2277,90 +2272,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThirdPersonPlayer
       objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485945, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485945, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
         type: 3}
       propertyPath: cam
       value: 
       objectReference: {fileID: 290482369}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: dashSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: jumpSpeed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: maxStamina
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: sprintSpeed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: airJumpSpeed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: dashCooldown
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: forwardSpeed
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: staminaDrain
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: staminaRegen
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: movementSpeed
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24205f34db13693429867fc755a88a8c, type: 3}
---- !u!1 &3795498424074995214 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3795498423884485945, guid: 24205f34db13693429867fc755a88a8c,
-    type: 3}
-  m_PrefabInstance: {fileID: 3795498424074995213}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3795498424074995215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3795498424074995214}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7601ef5504af65448e36ad0d2eb0e4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnKey: 108
-  currentCheckpoint: {x: 0, y: 0, z: 0}
