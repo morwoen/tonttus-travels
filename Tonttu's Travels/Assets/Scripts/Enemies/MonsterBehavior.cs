@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class MonsterBehavior : MonoBehaviour
 {
 
-  public GameObject player;
+  public GameObject target;
   public float distanceToKill = 2f;
   public float distanceToHunt = 10f;
 
@@ -24,24 +24,35 @@ public class MonsterBehavior : MonoBehaviour
 
   void Update()
   {
-    float distance = Vector3.Distance(player.transform.position, transform.position);
+    if (target) {
+        float distance = Vector3.Distance(target.transform.position, transform.position);
 
-    if (distance <= distanceToHunt)
-    {
-      animator.SetBool("Alert", true);
-      agent.SetDestination(player.transform.position);
-      isChasing = true;
-    }
+        if (distance <= distanceToHunt)
+        {
+          animator.SetBool("Alert", true);
+          agent.SetDestination(target.transform.position);
+          isChasing = true;
+        }
 
-    if (isChasing && distance > distanceToHunt)
-    {
-      animator.SetBool("Alert", false);
-      patrol.GotoNextPoint();
-    }
+        if (isChasing && distance > distanceToHunt)
+        {
+          animator.SetBool("Alert", false);
+          patrol.GotoNextPoint();
+          SetTarget(null);
+        }
 
-    if (distance <= distanceToKill)
-    {
-      player.GetComponent<PlayerCheckpoint>().LoadCheckpoint();
+        if (distance <= distanceToKill)
+        {
+            target.GetComponent<PlayerCheckpoint>().LoadCheckpoint();
+        }
     }
+  }
+
+  public void SetTarget(GameObject player) {
+     target = player;
+  }
+
+  public bool HasTarget() {
+    return !!target;
   }
 }
