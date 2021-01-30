@@ -225,14 +225,18 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void HandleClimbing()
   {
-    //transform.RotateAround(rope.position, Vector3.up, -hor * ropeTurnSpeed * Time.fixedDeltaTime);
-
     rb.useGravity = false;
     rb.velocity = Vector3.zero;
     Vector3 direction = new Vector3(0.0f, ver, 0.0f).normalized;
-    rb.MovePosition(transform.position + direction * climbingSpeed * Time.fixedDeltaTime);
-    Quaternion rotation = Quaternion.Euler(0.0f, hor * ropeTurnSpeed * Time.fixedDeltaTime, 0.0f);
-    rb.MoveRotation(rb.rotation * rotation);
+    var verticalMovement = transform.position + direction * climbingSpeed * Time.fixedDeltaTime;
+
+    Quaternion q = Quaternion.AngleAxis(-hor * ropeTurnSpeed * Time.fixedDeltaTime, Vector3.up);
+    var horizontalMovement = q * (rb.transform.position - rope.transform.position) + rope.transform.position;
+
+    horizontalMovement.y = verticalMovement.y;
+
+    rb.MovePosition(horizontalMovement);
+    rb.MoveRotation(rb.transform.rotation * q);
 
     if (isJumping)
     {
