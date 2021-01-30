@@ -31,6 +31,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   private int currentJump = 0;
   private bool onGround = true;
   private bool isJumping = false;
+  private bool letGoOfJump = true;
   private float jumpTimer = 0.0f;
   #endregion
 
@@ -94,12 +95,17 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void CheckForJump()
   {
+    if (Input.GetAxis("Jump") == 0) {
+      letGoOfJump = true;
+    }
+
     jumpTimer -= Time.deltaTime;
     jumpTimer = Mathf.Clamp(jumpTimer, 0.0f, jumpCooldown);
 
-    if ((onGround || isClimbing || currentJump < maxJumps) && Input.GetAxis("Jump") != 0 && jumpTimer == 0)
+    if (letGoOfJump && (onGround || isClimbing || currentJump < maxJumps) && Input.GetAxis("Jump") != 0 && jumpTimer == 0)
     {
       isJumping = true;
+      letGoOfJump = false;
       currentJump++;
       jumpTimer = jumpCooldown;
     }
