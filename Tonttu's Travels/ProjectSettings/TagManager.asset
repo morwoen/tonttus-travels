@@ -6,6 +6,8 @@ TagManager:
   tags:
   - checkpoint
   - deadzone
+  - ground
+  - Pickup
   layers:
   - Default
   - TransparentFX
