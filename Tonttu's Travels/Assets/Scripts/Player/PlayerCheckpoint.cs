@@ -2,8 +2,6 @@
 
 public class PlayerCheckpoint : MonoBehaviour
 {
-    // TODO: map to unity input
-    public KeyCode spawnKey = KeyCode.L;
     public Vector3 currentCheckpoint;
 
     void SaveCheckpoint(Vector3 newCheckpoint) {
@@ -31,12 +29,6 @@ public class PlayerCheckpoint : MonoBehaviour
                 break;
             default:
                 return;
-        }
-    }
-
-    private void Update() {
-        if (Input.GetKeyDown(spawnKey)) {
-            LoadCheckpoint();
         }
     }
 }
