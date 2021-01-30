@@ -872,7 +872,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1720565794}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 32838053e0ac6a042ad72b3412ee3c78, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -1431,7 +1431,7 @@ PrefabInstance:
     - target: {fileID: 2573633205084826340, guid: d15e635ca099f724794c824b25b85320,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 9.964422
+      value: 8.734423
       objectReference: {fileID: 0}
     - target: {fileID: 2573633205084826340, guid: d15e635ca099f724794c824b25b85320,
         type: 3}
@@ -1586,11 +1586,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3795498423884485941, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3795498423884485944, guid: 24205f34db13693429867fc755a88a8c,
         type: 3}
       propertyPath: m_RootOrder
@@ -1604,7 +1599,7 @@ PrefabInstance:
     - target: {fileID: 3795498423884485944, guid: 24205f34db13693429867fc755a88a8c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.23
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3795498423884485944, guid: 24205f34db13693429867fc755a88a8c,
         type: 3}
@@ -1650,16 +1645,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ThirdPersonPlayer
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485945, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3795498423884485945, guid: 24205f34db13693429867fc755a88a8c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3795498423884485946, guid: 24205f34db13693429867fc755a88a8c,
         type: 3}

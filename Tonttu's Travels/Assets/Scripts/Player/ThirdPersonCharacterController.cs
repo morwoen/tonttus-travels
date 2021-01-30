@@ -4,6 +4,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
 {
   public GameObject cam;
 
+  private Animator animator;
   private Rigidbody rb;
 
   #region IO
@@ -173,6 +174,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
       if (isSprinting)
       {
         speed = GetSpeed(sprintSpeed);
+        animator.SetFloat("Locomotion", 1.0f);
       }
       else if (isInStealth)
       {
@@ -185,10 +187,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
       else
       {
         speed = GetSpeed(movementSpeed);
+        animator.SetFloat("Locomotion", 0.5f);
       }
 
       Vector3 moveDir = Quaternion.Euler(0f, inputAngle, 0f) * Vector3.forward;
       rb.MovePosition(transform.position + moveDir.normalized * speed * Time.fixedDeltaTime);
+    }
+    else
+    {
+      animator.SetFloat("Locomotion", 0.0f);
     }
   }
 
@@ -196,6 +203,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (isJumping)
     {
+      animator.SetTrigger("Jump");
       isJumping = false;
       float speed = onGround ? jumpSpeed : airJumpSpeed;
       rb.AddForce(Vector3.up * speed, ForceMode.Impulse);
@@ -240,6 +248,22 @@ public class ThirdPersonCharacterController : MonoBehaviour
     }
   }
 
+  void OnCollisionStay(Collision collision)
+  {
+    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    {
+      animator.SetBool("isFalling", false);
+    }
+  }
+
+  void OnCollisionExit(Collision collision)
+  {
+    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    {
+      animator.SetBool("isFalling", true);
+    }
+  }
+
   void OnTriggerEnter(Collider collider)
   {
     if (collider.gameObject.CompareTag("rope") && !isClimbing)
@@ -266,6 +290,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   void Start()
   {
     rb = GetComponentInChildren<Rigidbody>();
+    animator = GetComponentInChildren<Animator>();
     Cursor.lockState = CursorLockMode.Locked;
     Cursor.visible = false;
   }
