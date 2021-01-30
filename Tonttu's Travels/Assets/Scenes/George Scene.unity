@@ -320,7 +320,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 290482369}
-  m_LocalRotation: {x: 0.20661281, y: -0.00000003344224, z: 0.0000000070619723, w: 0.9784228}
+  m_LocalRotation: {x: 0.20661281, y: -0.000000032551412, z: 0.0000000068738575, w: 0.9784228}
   m_LocalPosition: {x: 0, y: 9.964422, z: -46.435314}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -736,6 +736,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distanceToHunt: 10
+  player: {fileID: 3795498424074995214}
+  patrol: {fileID: 0}
 --- !u!1 &1613206508
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,12 +1188,12 @@ PrefabInstance:
     - target: {fileID: 2573633206340554060, guid: d15e635ca099f724794c824b25b85320,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000016769068
+      value: 0.00000001676907
       objectReference: {fileID: 0}
     - target: {fileID: 2573633206340554060, guid: d15e635ca099f724794c824b25b85320,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000003854592
+      value: -0.000000003854592
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d15e635ca099f724794c824b25b85320, type: 3}
@@ -1339,3 +1341,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24205f34db13693429867fc755a88a8c, type: 3}
+--- !u!1 &3795498424074995214 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3795498423884485945, guid: 24205f34db13693429867fc755a88a8c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3795498424074995213}
+  m_PrefabAsset: {fileID: 0}
