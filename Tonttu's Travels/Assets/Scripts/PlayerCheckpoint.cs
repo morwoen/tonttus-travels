@@ -2,7 +2,7 @@
 
 public class PlayerCheckpoint : MonoBehaviour
 {
-    // TODO: move to a menu
+    // TODO: map to unity input
     public KeyCode spawnKey = KeyCode.L;
     public Vector3 currentCheckpoint;
 
@@ -10,7 +10,7 @@ public class PlayerCheckpoint : MonoBehaviour
         currentCheckpoint = newCheckpoint;
     }
 
-    void LoadCheckpoint() {
+    public void LoadCheckpoint() {
         transform.position = currentCheckpoint;
     }
 
