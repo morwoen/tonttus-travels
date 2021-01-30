@@ -93,7 +93,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void CheckForSprint()
   {
-    if (stamina > 0 && Input.GetAxis("Fire1") != 0)
+    if (stamina > 0 && Input.GetAxis("Fire1") != 0 && onGround)
     {
       isSprinting = true;
       isInStealth = false;
