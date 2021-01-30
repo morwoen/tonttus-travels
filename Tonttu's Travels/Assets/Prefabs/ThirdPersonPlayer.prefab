@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 3795498423884485946}
   - component: {fileID: 3795498423884485941}
   - component: {fileID: 3795498423884485947}
+  - component: {fileID: 8015241293555108586}
+  - component: {fileID: 2980191360381175369}
+  - component: {fileID: 8266722849415546568}
   m_Layer: 0
   m_Name: ThirdPersonPlayer
   m_TagString: Untagged
@@ -64,7 +67,7 @@ MonoBehaviour:
   dashDuration: 10
   stealthSpeed: 1.5
   climbingSpeed: 2
-  dismountSpeed: 10
+  dismountSpeed: 1
 --- !u!54 &3795498423884485941
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -95,6 +98,44 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8015241293555108586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3795498423884485945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1300e8953362d5649b6ef480c2b6e265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2980191360381175369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3795498423884485945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7601ef5504af65448e36ad0d2eb0e4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentCheckpoint: {x: 0, y: 0, z: 0}
+--- !u!114 &8266722849415546568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3795498423884485945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd0ddd6294631148b9347eade06ec47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectedAmount: 0
 --- !u!1 &3795498424229359658
 GameObject:
   m_ObjectHideFlags: 0
