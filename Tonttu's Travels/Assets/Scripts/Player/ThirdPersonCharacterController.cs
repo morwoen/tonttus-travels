@@ -157,7 +157,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
     dashTimer = Mathf.Clamp(dashTimer, 0.0f, dashCooldown);
     hud.SetDash(dashTimer, dashCooldown);
 
-    if (Input.GetAxis("Fire2") != 0 && dashTimer == 0)
+    if (Input.GetAxis("Fire2") != 0 && dashTimer == 0 && !isClimbing)
     {
       isDashing = true;
       isInStealth = false;
@@ -238,6 +238,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
     if (isDashing)
     {
       isDashing = false;
+      animator.SetTrigger("Dash");
       rb.AddForce(transform.forward * GetSpeed(dashSpeed), ForceMode.Impulse);
       Invoke("StopDashVelocity", dashDuration * Time.fixedDeltaTime);
     }
@@ -249,6 +250,14 @@ public class ThirdPersonCharacterController : MonoBehaviour
     rb.velocity = Vector3.zero;
     Vector3 direction = new Vector3(0.0f, ver, 0.0f).normalized;
     var verticalMovement = transform.position + direction * climbingSpeed * Time.fixedDeltaTime;
+
+    if (ver != 0.0f)
+    {
+      animator.SetFloat("Climb", 1.0f);
+    } else
+    { 
+      animator.SetFloat("Climb", 0.0f);
+    }
 
     Quaternion q = Quaternion.AngleAxis(-hor * ropeTurnSpeed * Time.fixedDeltaTime, Vector3.up);
     var horizontalMovement = q * (rb.transform.position - rope.transform.position) + rope.transform.position;
@@ -299,6 +308,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
       direction.y = transform.position.y;
       transform.LookAt(direction);
 
+      animator.SetBool("isClimbing", true);
       isClimbing = true;
       onGround = false;
       currentJump = 0;
@@ -309,6 +319,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (collider.gameObject.CompareTag("rope"))
     {
+      animator.SetBool("isClimbing", false);
       rope = null;
       isClimbing = false;
       rb.useGravity = true;
