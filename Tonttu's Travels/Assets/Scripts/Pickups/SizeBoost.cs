@@ -22,7 +22,7 @@ public class SizeBoost : MonoBehaviour, IPickable
         Destroy(gameObject, duration + 1);
     }
 
-    public void Pick(ThirdPersonCharacterController player) {
+    public void Pick(ThirdPersonCharacterController player, HUDScript hud) {
         StartCoroutine(IncreaseSize(player));
     }
 }

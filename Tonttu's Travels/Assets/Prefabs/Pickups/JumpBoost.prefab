@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 727005355}
   - component: {fileID: 727005358}
   - component: {fileID: 727005357}
+  - component: {fileID: 1439644189}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Pickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,6 +80,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!136 &1439644189
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727005354}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: -0.00000047683716, z: 0}
 --- !u!1 &6161547064103593514
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +104,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6161547064103593510}
   - component: {fileID: 6161547064103593509}
-  - component: {fileID: 438406994}
   m_Layer: 0
   m_Name: JumpBoost
   m_TagString: Pickup
@@ -128,17 +142,3 @@ MonoBehaviour:
   playerJumpBoostAmount: 3
   respawnTimeInSeconds: 5
   pickupModel: {fileID: 727005354}
---- !u!136 &438406994
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6161547064103593514}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.37
-  m_Height: 1.72
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}

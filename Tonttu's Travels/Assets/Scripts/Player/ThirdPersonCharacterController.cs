@@ -6,6 +6,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   private Animator animator;
   private Rigidbody rb;
+  private Collision groundCollission;
 
   #region IO
   private float hor;
@@ -31,6 +32,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   private int currentJump = 0;
   private bool onGround = true;
   private bool isJumping = false;
+  private bool letGoOfJump = true;
   private float jumpTimer = 0.0f;
   #endregion
 
@@ -41,6 +43,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   public float staminaRegen = 1.0f;
 
   private float stamina = 0.0f;
+  private bool isExhausted = false;
   private bool isSprinting = false;
   #endregion
 
@@ -63,8 +66,14 @@ public class ThirdPersonCharacterController : MonoBehaviour
   #region Climbing
   public float climbingSpeed = 2.0f;
   public float dismountSpeed = 1.0f;
+  public float ropeTurnSpeed = 200.0f;
 
   private bool isClimbing = false;
+  private Transform rope = null;
+  #endregion
+
+  #region HUD
+  public HUDScript hud;
   #endregion
 
   #region Utilities
@@ -88,12 +97,17 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void CheckForJump()
   {
+    if (Input.GetAxis("Jump") == 0) {
+      letGoOfJump = true;
+    }
+
     jumpTimer -= Time.deltaTime;
     jumpTimer = Mathf.Clamp(jumpTimer, 0.0f, jumpCooldown);
 
-    if ((onGround || isClimbing || currentJump < maxJumps) && Input.GetAxis("Jump") != 0 && jumpTimer == 0)
+    if (letGoOfJump && (onGround || isClimbing || currentJump < maxJumps) && Input.GetAxis("Jump") != 0 && jumpTimer == 0)
     {
       isJumping = true;
+      letGoOfJump = false;
       currentJump++;
       jumpTimer = jumpCooldown;
     }
@@ -101,12 +115,19 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void CheckForSprint()
   {
-    if (stamina > 0 && Input.GetAxis("Fire1") != 0 && onGround)
+    if (onGround && !isSprinting && stamina > 0 && Input.GetAxis("Fire1") != 0 && !isExhausted)
     {
       isSprinting = true;
       isInStealth = false;
     }
-    else
+
+    if (isSprinting && stamina == 0)
+    {
+      isSprinting = false;
+      isExhausted = true;
+    }
+
+    if (isSprinting && (Input.GetAxis("Fire1") == 0 || !onGround))
     {
       isSprinting = false;
     }
@@ -121,12 +142,20 @@ public class ThirdPersonCharacterController : MonoBehaviour
       stamina += staminaRegen * Time.deltaTime;
       stamina = Mathf.Clamp(stamina, 0.0f, maxStamina);
     }
+
+    if (stamina == maxStamina)
+    {
+      isExhausted = false;
+    }
+
+    hud.SetSprint(stamina, maxStamina);
   }
 
   void CheckForDash()
   {
     dashTimer -= Time.deltaTime;
     dashTimer = Mathf.Clamp(dashTimer, 0.0f, dashCooldown);
+    hud.SetDash(dashTimer, dashCooldown);
 
     if (Input.GetAxis("Fire2") != 0 && dashTimer == 0)
     {
@@ -219,7 +248,15 @@ public class ThirdPersonCharacterController : MonoBehaviour
     rb.useGravity = false;
     rb.velocity = Vector3.zero;
     Vector3 direction = new Vector3(0.0f, ver, 0.0f).normalized;
-    rb.MovePosition(transform.position + direction * climbingSpeed * Time.fixedDeltaTime);
+    var verticalMovement = transform.position + direction * climbingSpeed * Time.fixedDeltaTime;
+
+    Quaternion q = Quaternion.AngleAxis(-hor * ropeTurnSpeed * Time.fixedDeltaTime, Vector3.up);
+    var horizontalMovement = q * (rb.transform.position - rope.transform.position) + rope.transform.position;
+
+    horizontalMovement.y = verticalMovement.y;
+
+    rb.MovePosition(horizontalMovement);
+    rb.MoveRotation(rb.transform.rotation * q);
 
     if (isJumping)
     {
@@ -230,37 +267,34 @@ public class ThirdPersonCharacterController : MonoBehaviour
       isClimbing = false;
     }
   }
-  #endregion
 
-  void OnCollisionEnter(Collision collision)
+  void HandleGroundDetection()
   {
-    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    RaycastHit hit;
+
+    Vector3 origin = transform.position;
+    origin.y += 0.1f;
+    bool hasHit = Physics.Raycast(origin, Vector3.down, out hit, 0.2f);
+
+    if (hasHit)
     {
       onGround = true;
       currentJump = 0;
-    }
-  }
-
-  void OnCollisionStay(Collision collision)
-  {
-    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-    {
       animator.SetBool("isFalling", false);
     }
-  }
-
-  void OnCollisionExit(Collision collision)
-  {
-    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    else
     {
       animator.SetBool("isFalling", true);
     }
   }
+  #endregion
 
+  #region Collisions
   void OnTriggerEnter(Collider collider)
   {
     if (collider.gameObject.CompareTag("rope") && !isClimbing)
     {
+      rope = collider.gameObject.transform;
       Vector3 direction = collider.gameObject.transform.position;
       direction.y = transform.position.y;
       transform.LookAt(direction);
@@ -275,10 +309,12 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (collider.gameObject.CompareTag("rope"))
     {
+      rope = null;
       isClimbing = false;
       rb.useGravity = true;
     }
   }
+  #endregion
 
   void Start()
   {
@@ -299,6 +335,11 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void FixedUpdate()
   {
+    if (!isJumping)
+    {
+      HandleGroundDetection();
+    }
+
     if (!isClimbing)
     {
       HandleMovement();

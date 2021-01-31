@@ -35,6 +35,7 @@ GameObject:
   - component: {fileID: 3795498424229359652}
   - component: {fileID: 2980191360381175369}
   - component: {fileID: 8266722849415546568}
+  - component: {fileID: 1107439558}
   m_Layer: 9
   m_Name: ThirdPersonPlayer
   m_TagString: Player
@@ -77,19 +78,21 @@ MonoBehaviour:
   glidingSpeed: 1.5
   movementSpeed: 3
   maxJumps: 2
-  jumpSpeed: 6
-  airJumpSpeed: 3
+  jumpSpeed: 10
+  airJumpSpeed: 7
   jumpCooldown: 0.3
   maxStamina: 5
-  sprintSpeed: 6
+  sprintSpeed: 4
   staminaDrain: 3
   staminaRegen: 1
   dashSpeed: 8
   dashCooldown: 3
   dashDuration: 10
   stealthSpeed: 1.5
-  climbingSpeed: 2
+  climbingSpeed: 4
   dismountSpeed: 1
+  ropeTurnSpeed: 200
+  hud: {fileID: 0}
 --- !u!54 &3795498423884485941
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -113,7 +116,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3795498423884485945}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 38d9f217a4db586478f2e716edc06c00, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.4
@@ -196,6 +199,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectedAmount: 0
+--- !u!65 &1107439558
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3795498423884485945}
+  m_Material: {fileID: 13400000, guid: 7fd2741abec37be4782165a20642b147, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.4, y: 1, z: 0.4}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &3795498424229359658
 GameObject:
   m_ObjectHideFlags: 0
