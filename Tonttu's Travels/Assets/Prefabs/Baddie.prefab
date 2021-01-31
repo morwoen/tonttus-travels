@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  distanceToKill: 2
+  distanceToKill: 1
   distanceToHunt: 10
   patrolSpeed: 5
   chaseSpeed: 10
