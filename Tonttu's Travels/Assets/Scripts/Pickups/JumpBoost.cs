@@ -6,10 +6,12 @@ public class JumpBoost : MonoBehaviour, IPickable
   public float duration = 3f;
   public float playerJumpBoostAmount = 3f;
   public float respawnTimeInSeconds = 5f;
+  public AudioSource pickupSound;
 
   public GameObject pickupModel;
 
-  float previousJumpForce;
+  private float previousJumpForce;
+  private bool pickedUp = false;
 
   IEnumerator JumpBoostLife(ThirdPersonCharacterController player, HUDScript hud) {
     previousJumpForce = player.jumpSpeed;
@@ -19,6 +21,7 @@ public class JumpBoost : MonoBehaviour, IPickable
 
     yield return new WaitForSeconds(duration);
     player.jumpSpeed = previousJumpForce;
+    pickedUp = false;
   }
 
   IEnumerator PickMe() {
@@ -28,6 +31,9 @@ public class JumpBoost : MonoBehaviour, IPickable
   }
 
   public void Pick(ThirdPersonCharacterController player, HUDScript hud) {
+    if (pickedUp) return;
+    pickedUp = true;
+    pickupSound.Play();
     StartCoroutine(JumpBoostLife(player, hud));
     StartCoroutine(PickMe());
   }
