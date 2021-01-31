@@ -5,40 +5,32 @@ using System.Collections;
 
 public class PatrolScript : MonoBehaviour
 {
+  public Transform[] points;
+  public NavMeshAgent agent;
+  
+  private int destPoint = 0;
+  private MonsterBehavior mbScript;
 
-    public Transform[] points;
-    private int destPoint = 0;
-    public NavMeshAgent agent;
+  void Start()
+  {
+    agent = GetComponent<NavMeshAgent>();
+    mbScript = GetComponent<MonsterBehavior>();
+  }
 
+  public GameObject GetNextPoint()
+  {
+    if (points.Length == 0)
+      return null;
 
-    void Start()
+    float distance = Vector3.Distance(points[destPoint].position, transform.position);
+
+    if (distance < mbScript.checkpointDistance)
     {
-        agent = GetComponent<NavMeshAgent>();
-
-
-        
-
-        GotoNextPoint();
+      destPoint = (destPoint + 1) % points.Length;
     }
 
-
-    public void GotoNextPoint()
-    {
-
-        if (points.Length == 0)
-            return;
-
-
-        agent.destination = points[destPoint].position;
-
-        destPoint = (destPoint + 1) % points.Length;
-    }
-
-
-    void Update()
-    {
-
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
-            GotoNextPoint();
-    }
+    var destination = points[destPoint].gameObject;
+    
+    return destination;
+  }
 }

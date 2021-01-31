@@ -1,24 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!95 &7334576324699987287
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7568527456971465208}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2d56523fb895fed46a889f0dd3760b6d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7334576325263399202
 GameObject:
   m_ObjectHideFlags: 0
@@ -29,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7334576325263399200}
   - component: {fileID: 7334576325263399201}
-  - component: {fileID: 7334576325263399207}
   - component: {fileID: 7334576325263399206}
-  - component: {fileID: 7334576325263399205}
+  - component: {fileID: 828420895}
+  - component: {fileID: 828420900}
   m_Layer: 0
   m_Name: Baddie
   m_TagString: Untagged
@@ -69,28 +50,10 @@ MonoBehaviour:
   target: {fileID: 0}
   distanceToKill: 2
   distanceToHunt: 10
---- !u!195 &7334576325263399207
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7334576325263399202}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  patrolSpeed: 5
+  chaseSpeed: 10
+  checkpointDistance: 0.1
+  turnTime: 5
 --- !u!114 &7334576325263399206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,24 +69,55 @@ MonoBehaviour:
   points:
   - {fileID: 0}
   - {fileID: 0}
-  agent: {fileID: 7334576325263399207}
---- !u!114 &7334576325263399205
-MonoBehaviour:
+  agent: {fileID: 0}
+--- !u!54 &828420895
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7334576325263399202}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!135 &828420900
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7334576325263399202}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e6aaec9f0857614e833e0b4b42801f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chaseDetectRange: 15
-  maxSeeDistance: 100
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 512
+  serializedVersion: 2
+  m_Radius: 10
+  m_Center: {x: 0, y: 2.54, z: 0}
+--- !u!95 &7334576324699987287
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7568527456971465208}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2d56523fb895fed46a889f0dd3760b6d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &7334576325134261417
 PrefabInstance:
   m_ObjectHideFlags: 0
