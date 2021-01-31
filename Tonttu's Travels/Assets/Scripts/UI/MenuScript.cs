@@ -20,10 +20,10 @@ public class MenuScript : MonoBehaviour
 
   private void SelectOption(GameObject option)
   {
-    button1.transform.GetChild(0).gameObject.SetActive(false);
-    button2.transform.GetChild(0).gameObject.SetActive(false);
+    //button1.transform.GetChild(0).gameObject.SetActive(false);
+    //button2.transform.GetChild(0).gameObject.SetActive(false);
 
-    option.transform.GetChild(0).gameObject.SetActive(true);
+    //option.transform.GetChild(0).gameObject.SetActive(true);
     selectedOption = option.GetComponent<Button>();
   }
 
