@@ -9,6 +9,8 @@ TagManager:
   - ground
   - rope
   - Pickup
+  - Portal
+  - Item
   layers:
   - Default
   - TransparentFX
