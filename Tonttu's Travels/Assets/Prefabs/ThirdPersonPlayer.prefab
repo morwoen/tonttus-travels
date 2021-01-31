@@ -1012,7 +1012,7 @@ MonoBehaviour:
   maxJumps: 2
   jumpSpeed: 11
   airJumpSpeed: 10
-  jumpCooldown: 0.6
+  jumpCooldown: 0.3
   maxStamina: 10
   sprintSpeed: 7
   staminaDrain: 3

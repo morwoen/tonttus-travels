@@ -14,7 +14,8 @@ public class Portal : MonoBehaviour {
     if (other.gameObject.CompareTag("Player") && isActive) {
       winScreenUIPanel.SetActive(true);
       //other.gameObject.transform.position = transportTo.position;
-
+      Cursor.lockState = CursorLockMode.None;
+      Cursor.visible = true;
     }
   }
 
