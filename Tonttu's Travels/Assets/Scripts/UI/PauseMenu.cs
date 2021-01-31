@@ -8,6 +8,10 @@ public class PauseMenu : MonoBehaviour
   private float initialTimeScale;
   private bool isPaused = false;
 
+  public GameObject[] tutorials;
+
+  private int openTutorial = -1;
+
   private void Start() {
     initialTimeScale = Time.timeScale;
   }
@@ -17,6 +21,8 @@ public class PauseMenu : MonoBehaviour
 
     if (pauseButtonPressed && !isPaused) {
       PauseGame();
+    } else if (pauseButtonPressed && isPaused) {
+      ResumeGame();
     }
   }
 
@@ -34,14 +40,32 @@ public class PauseMenu : MonoBehaviour
   public void ResumeGame() {
     Time.timeScale = initialTimeScale;
 
+    if (openTutorial > -1) {
+      tutorials[openTutorial].SetActive(true);
+    }
+
     isPaused = false;
     pauseMenuPanel.SetActive(false);
     hud.SetActive(true);
     ToggleMouse(true);
+
+
+    if (openTutorial != -1 && openTutorial == tutorials.Length - 1) {
+      ToggleMouse(true);
+    }
   }
 
   public void PauseGame() {
     Time.timeScale = 0;
+
+    openTutorial = -1;
+    for (var a = 0; a < tutorials.Length; a++) {
+      if (tutorials[a].activeSelf) {
+        openTutorial = a;
+        tutorials[a].SetActive(false);
+        break;
+      }
+    }
 
     isPaused = true;
     pauseMenuPanel.SetActive(true);
