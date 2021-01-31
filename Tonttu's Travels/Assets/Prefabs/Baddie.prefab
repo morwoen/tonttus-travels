@@ -1,5 +1,24 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!95 &3768041464257823856
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1902932932545581098}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2d56523fb895fed46a889f0dd3760b6d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7334576325263399202
 GameObject:
   m_ObjectHideFlags: 0
@@ -51,8 +70,8 @@ MonoBehaviour:
   target: {fileID: 0}
   distanceToKill: 1
   distanceToHunt: 10
-  patrolSpeed: 5
-  chaseSpeed: 10
+  patrolSpeed: 4
+  chaseSpeed: 6
   checkpointDistance: 0.1
   turnTime: 5
 --- !u!114 &7334576325263399206
@@ -203,6 +222,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a26b549ff02b543468d505290d4d476a, type: 3}
+--- !u!1 &1902932932545581098 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a26b549ff02b543468d505290d4d476a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1633112018410581371}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1234905245234350736 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a26b549ff02b543468d505290d4d476a,
