@@ -42,6 +42,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   public float staminaRegen = 1.0f;
 
   private float stamina = 0.0f;
+  private bool isExhausted = false;
   private bool isSprinting = false;
   #endregion
 
@@ -113,12 +114,19 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void CheckForSprint()
   {
-    if (stamina > 0 && Input.GetAxis("Fire1") != 0 && onGround)
+    if (onGround && !isSprinting && stamina > 0 && Input.GetAxis("Fire1") != 0 && !isExhausted)
     {
       isSprinting = true;
       isInStealth = false;
     }
-    else
+
+    if (isSprinting && stamina == 0)
+    {
+      isSprinting = false;
+      isExhausted = true;
+    }
+
+    if (isSprinting && (Input.GetAxis("Fire1") == 0 || !onGround))
     {
       isSprinting = false;
     }
@@ -132,6 +140,11 @@ public class ThirdPersonCharacterController : MonoBehaviour
     {
       stamina += staminaRegen * Time.deltaTime;
       stamina = Mathf.Clamp(stamina, 0.0f, maxStamina);
+    }
+
+    if (stamina == maxStamina)
+    {
+      isExhausted = false;
     }
 
     hud.SetSprint(stamina, maxStamina);
@@ -255,6 +268,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   }
   #endregion
 
+  #region Collisions
   void OnCollisionEnter(Collision collision)
   {
     if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
@@ -304,6 +318,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
       rb.useGravity = true;
     }
   }
+  #endregion
 
   void Start()
   {
