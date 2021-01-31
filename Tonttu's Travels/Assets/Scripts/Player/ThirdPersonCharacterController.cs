@@ -6,6 +6,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   private Animator animator;
   private Rigidbody rb;
+  private Collision groundCollission;
 
   #region IO
   private float hor;
@@ -42,6 +43,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   public float staminaRegen = 1.0f;
 
   private float stamina = 0.0f;
+  private bool isExhausted = false;
   private bool isSprinting = false;
   #endregion
 
@@ -113,12 +115,19 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void CheckForSprint()
   {
-    if (stamina > 0 && Input.GetAxis("Fire1") != 0 && onGround)
+    if (onGround && !isSprinting && stamina > 0 && Input.GetAxis("Fire1") != 0 && !isExhausted)
     {
       isSprinting = true;
       isInStealth = false;
     }
-    else
+
+    if (isSprinting && stamina == 0)
+    {
+      isSprinting = false;
+      isExhausted = true;
+    }
+
+    if (isSprinting && (Input.GetAxis("Fire1") == 0 || !onGround))
     {
       isSprinting = false;
     }
@@ -132,6 +141,11 @@ public class ThirdPersonCharacterController : MonoBehaviour
     {
       stamina += staminaRegen * Time.deltaTime;
       stamina = Mathf.Clamp(stamina, 0.0f, maxStamina);
+    }
+
+    if (stamina == maxStamina)
+    {
+      isExhausted = false;
     }
 
     hud.SetSprint(stamina, maxStamina);
@@ -253,33 +267,29 @@ public class ThirdPersonCharacterController : MonoBehaviour
       isClimbing = false;
     }
   }
-  #endregion
 
-  void OnCollisionEnter(Collision collision)
+  void HandleGroundDetection()
   {
-    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    RaycastHit hit;
+
+    Vector3 origin = transform.position;
+    origin.y += 0.1f;
+    bool hasHit = Physics.Raycast(origin, Vector3.down, out hit, 0.2f);
+
+    if (hasHit)
     {
       onGround = true;
       currentJump = 0;
-    }
-  }
-
-  void OnCollisionStay(Collision collision)
-  {
-    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-    {
       animator.SetBool("isFalling", false);
     }
-  }
-
-  void OnCollisionExit(Collision collision)
-  {
-    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    else
     {
       animator.SetBool("isFalling", true);
     }
   }
+  #endregion
 
+  #region Collisions
   void OnTriggerEnter(Collider collider)
   {
     if (collider.gameObject.CompareTag("rope") && !isClimbing)
@@ -304,6 +314,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
       rb.useGravity = true;
     }
   }
+  #endregion
 
   void Start()
   {
@@ -324,6 +335,11 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
   void FixedUpdate()
   {
+    if (!isJumping)
+    {
+      HandleGroundDetection();
+    }
+
     if (!isClimbing)
     {
       HandleMovement();
