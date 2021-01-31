@@ -5,8 +5,6 @@ using UnityEngine;
 public class PlayerDetection : MonoBehaviour
 {
     [SerializeField]
-    float chaseDetectRange = 0f;
-    [SerializeField]
     float maxSeeDistance = 0f;
 
     public LayerMask playerMask;
@@ -17,23 +15,15 @@ public class PlayerDetection : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        Collider[] collisions = Physics.OverlapSphere(transform.position, chaseDetectRange, playerMask);
+        //Collider[] collisions = Physics.OverlapSphere(transform.position, mb.distanceToHunt, playerMask);
 
-        foreach (Collider collider in collisions) {
-            if (collider.CompareTag("Player")) {
-                mb.SetTarget(collider.gameObject);
-                break;
-            }
-        }
+        //foreach (Collider collider in collisions) {
+        //    if (collider.CompareTag("Player")) {
+        //        mb.SetTarget(collider.gameObject);
+        //        break;
+        //    }
+        //}
 
-        if (mb.HasTarget()) {
-            RaycastHit hit;
-
-            bool isTargetFound = Physics.Raycast(transform.position, mb.target.transform.position - transform.position, out hit, maxSeeDistance);
-
-            if (!isTargetFound || !hit.collider.gameObject.CompareTag("Player")) {
-                mb.SetTarget(null);
-            }
-        }
+        
     }
 }
