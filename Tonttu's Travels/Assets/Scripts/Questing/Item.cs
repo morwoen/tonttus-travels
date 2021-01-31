@@ -6,6 +6,7 @@ public class Item : MonoBehaviour, IUsable
 {
   public string itemID;
   public string itemName;
+  public AudioClip pickupAudio;
 
   public void UseItem() {
     gameObject.SetActive(false);
