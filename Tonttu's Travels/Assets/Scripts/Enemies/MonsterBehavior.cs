@@ -16,9 +16,11 @@ public class MonsterBehavior : MonoBehaviour
 
   private Rigidbody rb;
   private Animator animator;
+  private AudioSource audio;
   private NavMeshAgent agent;
   private PatrolScript patrol;
   private float turnSmoothVelocity;
+  private bool hasMadeSound = false;
 
   void Start()
   {
@@ -26,6 +28,7 @@ public class MonsterBehavior : MonoBehaviour
     animator = GetComponentInChildren<Animator>();
     patrol = GetComponent<PatrolScript>();
     rb = GetComponent<Rigidbody>();
+    audio = GetComponent<AudioSource>();
   }
 
   void FixedUpdate()
@@ -64,6 +67,7 @@ public class MonsterBehavior : MonoBehaviour
           target.GetComponent<PlayerCheckpoint>().LoadCheckpoint();
           SetTarget(patrol.GetNextPoint());
           animator.SetBool("Alert", false);
+          hasMadeSound = false;
         }
       }
     }
@@ -90,7 +94,6 @@ public class MonsterBehavior : MonoBehaviour
       RaycastHit hit;
 
       bool isTargetFound = Physics.Raycast(transform.position, collider.transform.position - transform.position, out hit, distanceToHunt);
-      Debug.DrawRay(transform.position, collider.transform.position - transform.position, Color.blue);
 
       if (!isTargetFound || (isTargetFound && !hit.collider.gameObject.CompareTag("Player")))
       {
@@ -100,6 +103,11 @@ public class MonsterBehavior : MonoBehaviour
 
       SetTarget(collider.gameObject);
       animator.SetBool("Alert", true);
+      if (!audio.isPlaying && !hasMadeSound)
+      {
+        audio.Play();
+        hasMadeSound = true;
+      }
     }
   }
 
@@ -109,6 +117,7 @@ public class MonsterBehavior : MonoBehaviour
     {
       SetTarget(patrol.GetNextPoint());
       animator.SetBool("Alert", false);
+      hasMadeSound = false;
     }
   }
 }

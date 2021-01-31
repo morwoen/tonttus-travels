@@ -7,6 +7,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   private Animator animator;
   private Rigidbody rb;
   private Collision groundCollission;
+  private PlayerAudioController audioController;
 
   #region IO
   private float hor;
@@ -192,24 +193,30 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
       transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-      float speed = onGround ? isSprinting ? GetSpeed(sprintSpeed) : GetSpeed(movementSpeed) : GetSpeed(glidingSpeed);
-      if (isSprinting)
-      {
-        speed = GetSpeed(sprintSpeed);
-        animator.SetFloat("Locomotion", 1.0f);
-      }
-      else if (isInStealth)
+      audioController.Footsteps(true);
+      float speed;
+      if (isInStealth)
       {
         speed = GetSpeed(stealthSpeed);
       }
       else if (!onGround)
       {
         speed = GetSpeed(glidingSpeed);
+        audioController.Footsteps(false);
+        audioController.Sprint(false);
+      }
+      else if (isSprinting)
+      {
+        speed = GetSpeed(sprintSpeed);
+        animator.SetFloat("Locomotion", 1.0f);
+        audioController.Footsteps(false);
+        audioController.Sprint(true);
       }
       else
       {
         speed = GetSpeed(movementSpeed);
         animator.SetFloat("Locomotion", 0.5f);
+        audioController.Sprint(false);
       }
 
       Vector3 moveDir = Quaternion.Euler(0f, inputAngle, 0f) * Vector3.forward;
@@ -218,6 +225,8 @@ public class ThirdPersonCharacterController : MonoBehaviour
     else
     {
       animator.SetFloat("Locomotion", 0.0f);
+      audioController.Footsteps(false);
+      audioController.Sprint(false);
     }
   }
 
@@ -225,6 +234,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (isJumping)
     {
+      audioController.Jump();
       animator.SetTrigger("Jump");
       isJumping = false;
       float speed = onGround ? jumpSpeed : airJumpSpeed;
@@ -237,6 +247,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     if (isDashing)
     {
+      audioController.Dash();
       isDashing = false;
       rb.AddForce(transform.forward * GetSpeed(dashSpeed), ForceMode.Impulse);
       Invoke("StopDashVelocity", dashDuration * Time.fixedDeltaTime);
@@ -320,6 +331,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
   {
     rb = GetComponentInChildren<Rigidbody>();
     animator = GetComponentInChildren<Animator>();
+    audioController = GetComponentInChildren<PlayerAudioController>();
     Cursor.lockState = CursorLockMode.Locked;
     Cursor.visible = false;
   }
@@ -342,12 +354,14 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
     if (!isClimbing)
     {
+      audioController.Climb(false);
       HandleMovement();
       HandleJump();
       HandleDash();
     }
     else
     {
+      audioController.Climb(true);
       HandleClimbing();
     }
   }
