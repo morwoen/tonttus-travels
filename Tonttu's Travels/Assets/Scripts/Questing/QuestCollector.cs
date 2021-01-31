@@ -6,7 +6,8 @@ public class QuestCollector : MonoBehaviour
 {
   public LayerMask playerLayerMask;
   public List<Item> goals = new List<Item>();
-  public List<GameObject> placeholders = new List<GameObject>();
+  //public List<GameObject> placeholders = new List<GameObject>();
+  
 
   private void FixedUpdate() {
     Collider[] players = Physics.OverlapSphere(transform.position, 10f, playerLayerMask);
@@ -20,13 +21,13 @@ public class QuestCollector : MonoBehaviour
         foreach (Item playerItem in playerItems) {
           if (goals.Contains(playerItem)) {
             goals.Remove(playerItem);
-            GameObject placeholder = placeholders[0];
-            Vector3 placeholderPos = placeholder.transform.position;
+            //GameObject placeholder = placeholders[0];
+            //Vector3 placeholderPos = placeholder.transform.position;
 
             playerInventory.items.Remove(playerItem);
-            playerItem.Place(placeholderPos);
-            placeholder.SetActive(false);
-            placeholders.Remove(placeholder);
+            //playerItem.Place(placeholderPos);
+            //placeholder.SetActive(false);
+            //placeholders.Remove(placeholder);
 
             if (goals.Count == 0) {
               GetComponent<Portal>().Activate();
