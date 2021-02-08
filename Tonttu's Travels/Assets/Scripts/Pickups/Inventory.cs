@@ -37,7 +37,6 @@ public class Inventory : MonoBehaviour
 
       items.Add(collidedItem);
 
-      audioSource.PlayOneShot(collidedItem.pickupAudio);
       collidedItem.UseItem();
     }
   }
