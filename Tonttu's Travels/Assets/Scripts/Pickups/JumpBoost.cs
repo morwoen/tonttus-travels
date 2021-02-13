@@ -11,16 +11,20 @@ public class JumpBoost : MonoBehaviour, IPickable
   public GameObject pickupModel;
 
   private float previousJumpForce;
+  private float previousAirJumpForce;
   private bool pickedUp = false;
 
   IEnumerator JumpBoostLife(ThirdPersonCharacterController player, HUDScript hud) {
     previousJumpForce = player.jumpSpeed;
+    previousAirJumpForce = player.airJumpSpeed;
     player.jumpSpeed += playerJumpBoostAmount;
+    player.airJumpSpeed += playerJumpBoostAmount;
 
     hud.SetJumpBoost(duration);
 
     yield return new WaitForSeconds(duration);
     player.jumpSpeed = previousJumpForce;
+    player.airJumpSpeed = previousAirJumpForce;
     pickedUp = false;
   }
 
