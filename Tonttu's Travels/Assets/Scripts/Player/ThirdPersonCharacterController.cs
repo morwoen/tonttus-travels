@@ -238,6 +238,12 @@ public class ThirdPersonCharacterController : MonoBehaviour
       animator.SetTrigger("Jump");
       isJumping = false;
       float speed = onGround ? jumpSpeed : airJumpSpeed;
+
+      // Reset the vertical velocity
+      var velocity = rb.velocity;
+      velocity.y = 0;
+      rb.velocity = velocity;
+
       rb.AddForce(Vector3.up * speed, ForceMode.Impulse);
       onGround = false;
     }
