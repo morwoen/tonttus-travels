@@ -149,14 +149,14 @@ public class ThirdPersonCharacterController : MonoBehaviour
       isExhausted = false;
     }
 
-    hud.SetSprint(stamina, maxStamina);
+    hud?.SetSprint(stamina, maxStamina);
   }
 
   void CheckForDash()
   {
     dashTimer -= Time.deltaTime;
     dashTimer = Mathf.Clamp(dashTimer, 0.0f, dashCooldown);
-    hud.SetDash(dashTimer, dashCooldown);
+    hud?.SetDash(dashTimer, dashCooldown);
 
     if (Input.GetAxis("Fire2") != 0 && dashTimer == 0 && !isClimbing)
     {
