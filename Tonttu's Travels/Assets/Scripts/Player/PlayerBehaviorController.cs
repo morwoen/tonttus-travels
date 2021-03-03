@@ -1,35 +1,37 @@
 ﻿using UnityEngine;
 
-public class PlayerBehaviorController : MonoBehaviour
-{
+public class PlayerBehaviorController : MonoBehaviour {
   public GameObject cam;
 
   [Header("Movement")]
-  public float turnTime = 0.2f;
-  public float movementSpeed = 5;
   public float jumpForce = 1;
   public float pushPower = 1;
+  public float turnTime = 0.2f;
+  public float movementSpeed = 5;
+  public float jumpPushDuration = 400000.0f;
 
-  private Vector3 hitNormal;
-  private float currentSpeed;
-  private Vector3 movementDir;
-  private CharacterController cc;
-  private bool isSliding = false;
-  private float turnSmoothVelocity;
-
-  private Vector3 movement = new Vector3();
-  private bool doJump = false;
   private int jumpCount = 0;
+  private bool isSliding = false;
+  private bool doJump = false;
+  private float currentSpeed;
+  private float turnSmoothVelocity;
+  private Vector3 movementDir;
+  private Vector3 movement = new Vector3();
+  private CharacterController cc;
 
   [Header("Dashing")]
   public float dashSpeed = 40;
-  private bool doDash = false;
-  // TODO: How do we group it?
-  public float dashDuration = 0.2f;
-  private float remainingDashDuration = 0f;
   public float dashCooldown = 2;
+  public float dashDuration = 0.2f;
+
+  // TODO: How do we group it?
+  private bool doDash = false;
+  private float remainingDashDuration = 0f;
   private float remainingDashCooldown = 0f;
 
+  private GravityMovementEffect gravityEffect;
+  private SlidingMovementEffect slidingEffect;
+  private SlidingJumpMovementEffect slidingJumpEffect;
 
   private void HandleHorizontalDirection() {
     Vector3 inputDir = movement.normalized;
@@ -58,20 +60,19 @@ public class PlayerBehaviorController : MonoBehaviour
   private void HandleVerticalDirection() {
     if (cc.isGrounded) {
       if (isSliding) {
-        movementDir.x += (1.0f - hitNormal.y) * hitNormal.x * Mathf.Abs(Physics.gravity.y);
-        movementDir.z += (1.0f - hitNormal.y) * hitNormal.z * Mathf.Abs(Physics.gravity.y);
+        movementDir += slidingEffect.Apply();
       } else {
-        movementDir.y = Mathf.Max(movementDir.y, 0.0f);
+        movementDir.y = 0.0f;
       }
     }
+
+    movementDir += slidingJumpEffect.Apply();
 
     if (doJump) {
       doJump = false;
 
-      if (isSliding) {
-        // TODO: keep the force (without the *10) for some period
-        movementDir.x += (1.0f - hitNormal.y) * hitNormal.x * Mathf.Abs(Physics.gravity.y) * 10;
-        movementDir.z += (1.0f - hitNormal.y) * hitNormal.z * Mathf.Abs(Physics.gravity.y) * 10;
+      if (cc.isGrounded && isSliding) {
+        slidingJumpEffect.Activate();
       }
 
       if (jumpCount < 2) {
@@ -80,15 +81,20 @@ public class PlayerBehaviorController : MonoBehaviour
       }
     }
 
-    movementDir += Physics.gravity * Time.fixedDeltaTime;
+    movementDir += gravityEffect.Apply();
   }
 
   void Start() {
     currentSpeed = movementSpeed;
     cc = GetComponent<CharacterController>();
+    gravityEffect = new GravityMovementEffect();
+    slidingEffect = new SlidingMovementEffect();
+    slidingJumpEffect = new SlidingJumpMovementEffect(jumpPushDuration);
   }
 
   private void Update() {
+    gravityEffect.UpdateSelf();
+    slidingJumpEffect.UpdateTimer();
     // Capture input
     if (Input.GetButtonDown("Jump")) {
       doJump = true;
@@ -122,8 +128,9 @@ public class PlayerBehaviorController : MonoBehaviour
 
   void OnControllerColliderHit(ControllerColliderHit hit) {
     if (hit.moveDirection.y < -0.3f) {
-      hitNormal = hit.normal;
-      if (Vector3.Angle(Vector3.up, hitNormal) > cc.slopeLimit) {
+      if (Vector3.Angle(Vector3.up, hit.normal) > cc.slopeLimit) {
+        slidingEffect.UpdateSelf(hit.normal);
+        slidingJumpEffect.UpdateSelf(hit.normal);
         isSliding = true;
       } else {
         isSliding = false;
@@ -131,6 +138,7 @@ public class PlayerBehaviorController : MonoBehaviour
       return;
     }
 
+    // Push other objects:
     Rigidbody body = hit.collider.attachedRigidbody;
 
     // The other object doesnt have a rigid body
