@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class MovementEffect : Object {
+public abstract class MovementEffect {
   protected bool isTimed;
   protected bool isActive;
   protected float timer;
@@ -17,24 +17,17 @@ public class MovementEffect : Object {
     this.timer = timer;
   }
 
-  public void Activate() {
-    isActive = true;
-    ResetTimer();
+  public void Tick() {
+    if (!isTimed) return;
+    if (timer <= 0) return;
+    timer -= Time.deltaTime;
   }
 
-  protected void Deactivate() {
-    isActive = false;
+  public virtual bool IsActive() {
+    return !isTimed || timer > 0;
   }
 
-  protected void ResetTimer() {
-    currentTimer = timer;
-  }
-
-  public Vector3 Apply() {
-    if (isActive) {
-      return effect;
-    }
-
-    return Vector3.zero;
-  }
+  // Movement Effects are applied in FixedUpdate, always use Time.fixedDeltaTime
+  // velocity is the player velocity so far
+  public abstract Vector3 GetMovement(Vector3 velocity);
 }

@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class MonsterBehavior : MonoBehaviour
 {
-
   public GameObject target;
   public float distanceToKill = 2f;
   public float distanceToHunt = 10f;
@@ -16,7 +15,7 @@ public class MonsterBehavior : MonoBehaviour
 
   private Rigidbody rb;
   private Animator animator;
-  private AudioSource audio;
+  new private AudioSource audio; // TODO
   private NavMeshAgent agent;
   private PatrolScript patrol;
   private float turnSmoothVelocity;

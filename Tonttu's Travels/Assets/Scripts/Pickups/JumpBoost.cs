@@ -14,17 +14,17 @@ public class JumpBoost : MonoBehaviour, IPickable
   private float previousAirJumpForce;
   private bool pickedUp = false;
 
-  IEnumerator JumpBoostLife(ThirdPersonCharacterController player, HUDScript hud) {
-    previousJumpForce = player.jumpSpeed;
-    previousAirJumpForce = player.airJumpSpeed;
-    player.jumpSpeed += playerJumpBoostAmount;
-    player.airJumpSpeed += playerJumpBoostAmount;
+  IEnumerator JumpBoostLife(PlayerController player, HUDScript hud) {
+    //previousJumpForce = player.jumpSpeed;
+    //previousAirJumpForce = player.airJumpSpeed;
+    //player.jumpSpeed += playerJumpBoostAmount;
+    //player.airJumpSpeed += playerJumpBoostAmount;
 
-    hud.SetJumpBoost(duration);
+    hud?.SetJumpBoost(duration);
 
     yield return new WaitForSeconds(duration);
-    player.jumpSpeed = previousJumpForce;
-    player.airJumpSpeed = previousAirJumpForce;
+    //player.jumpSpeed = previousJumpForce;
+    //player.airJumpSpeed = previousAirJumpForce;
     pickedUp = false;
   }
 
@@ -34,7 +34,7 @@ public class JumpBoost : MonoBehaviour, IPickable
     pickupModel.SetActive(true);
   }
 
-  public void Pick(ThirdPersonCharacterController player, HUDScript hud) {
+  public void Pick(PlayerController player, HUDScript hud) {
     if (pickedUp) return;
     pickedUp = true;
     pickupSound.Play();

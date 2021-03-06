@@ -1,14 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SlidingMovementEffect : MovementEffect
 {
-  public SlidingMovementEffect() : base() {
-    Activate();
+  private Vector3 direction;
+  private float maxSlideSpeed;
+
+  public SlidingMovementEffect(Vector3 direction, float maxSlideSpeed) : base() {
+    this.direction = direction;
+    this.maxSlideSpeed = maxSlideSpeed;
   }
 
-  public void UpdateSelf(Vector3 hitNormal) {
-    effect = new Vector3((1.0f - hitNormal.y) * hitNormal.x * Mathf.Abs(Physics.gravity.y), 0.0f, (1.0f - hitNormal.y) * hitNormal.z * Mathf.Abs(Physics.gravity.y));
+  public override Vector3 GetMovement(Vector3 velocity) {
+    // Slide direction * vertical velocity (clamped to the maxSlideSpeed * the intensity of the slope)
+    return direction * Mathf.Clamp(Mathf.Abs(velocity.y), 0, maxSlideSpeed * Mathf.Abs(direction.y));
   }
 }

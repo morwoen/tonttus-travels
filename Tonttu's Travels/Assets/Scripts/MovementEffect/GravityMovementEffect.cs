@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 
 public class GravityMovementEffect : MovementEffect {
-  public GravityMovementEffect() : base() {
-    Activate();
-  }
+  public GravityMovementEffect() : base() {}
 
-  public void UpdateSelf() {
-    effect = Physics.gravity * Time.fixedDeltaTime;
+  public override Vector3 GetMovement(Vector3 velocity) {
+    return Physics.gravity * Time.fixedDeltaTime;
   }
 }

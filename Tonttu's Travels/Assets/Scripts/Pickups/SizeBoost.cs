@@ -8,7 +8,7 @@ public class SizeBoost : MonoBehaviour, IPickable
 
     Vector3 previousSize;
 
-    IEnumerator IncreaseSize(ThirdPersonCharacterController player) {
+    IEnumerator IncreaseSize(PlayerController player) {
         previousSize = player.transform.localScale;
         player.transform.localScale *= playerSizeBoostAmount;
         OnPickupDestroy();
@@ -22,7 +22,7 @@ public class SizeBoost : MonoBehaviour, IPickable
         Destroy(gameObject, duration + 1);
     }
 
-    public void Pick(ThirdPersonCharacterController player, HUDScript hud) {
+    public void Pick(PlayerController player, HUDScript hud) {
         StartCoroutine(IncreaseSize(player));
     }
 }

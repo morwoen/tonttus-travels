@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 2573633205084826340}
   - component: {fileID: 2573633205084826347}
   - component: {fileID: 2573633205084826341}
+  - component: {fileID: 8212006089944072150}
   m_Layer: 0
   m_Name: ThirdPersonCamera
   m_TagString: Untagged
@@ -150,7 +151,7 @@ MonoBehaviour:
     m_MaxSpeed: 4
     m_AccelTime: 0.1
     m_DecelTime: 0.1
-    m_InputAxisName: Mouse Y
+    m_InputAxisName: 
     m_InputAxisValue: 0
     m_InvertInput: 1
     m_MinValue: 0
@@ -174,7 +175,7 @@ MonoBehaviour:
     m_MaxSpeed: 450
     m_AccelTime: 0.1
     m_DecelTime: 0.1
-    m_InputAxisName: Mouse X
+    m_InputAxisName: 
     m_InputAxisValue: 0
     m_InvertInput: 0
     m_MinValue: -180
@@ -224,7 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CollideAgainst:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 257
   m_IgnoreTag: 
   m_TransparentLayers:
     serializedVersion: 2
@@ -240,6 +241,18 @@ MonoBehaviour:
   m_Damping: 0.1
   m_DampingWhenOccluded: 0.1
   m_OptimalTargetDistance: 0
+--- !u!114 &8212006089944072150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2573633205084826346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d4be52bd50aac48abf4bf2d866f12d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2708696790040073952
 GameObject:
   m_ObjectHideFlags: 0

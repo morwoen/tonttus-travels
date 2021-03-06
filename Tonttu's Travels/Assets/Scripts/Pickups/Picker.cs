@@ -2,12 +2,12 @@
 
 public class Picker : MonoBehaviour
 {
-  ThirdPersonCharacterController player;
-  HUDScript hud;
+  private PlayerController player;
+  private HUDScript hud;
 
   private void Start() {
-    player = GetComponent<ThirdPersonCharacterController>();
-    hud = player.hud;
+    player = GetComponent<PlayerController>();
+    hud = FindObjectOfType<HUDScript>();
   }
 
   private void OnTriggerEnter(Collider other) {

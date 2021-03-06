@@ -14,15 +14,19 @@ public class SlidingJumpMovementEffect : MovementEffect
 
   public void UpdateTimer() {
     if (currentTimer <= 0) {
-      Deactivate();
+      //Deactivate();
     } else {
       currentTimer -= Time.fixedDeltaTime;
     }
   }
 
   public Vector3 Apply() {
-    var test = base.Apply();
-    Debug.Log(test);
-    return test;
+    //var test = base.Apply();
+    //Debug.Log(test);
+    return Vector3.zero;
+  }
+
+  public override Vector3 GetMovement(Vector3 velocity) {
+    throw new System.NotImplementedException();
   }
 }
