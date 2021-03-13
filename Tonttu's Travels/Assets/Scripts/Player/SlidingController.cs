@@ -35,7 +35,7 @@ public class SlidingController : MonoBehaviour
       }
 
       this.slideDirection = slideDirection;
-      player.AddOverwritingMovementEffect(new SlidingMovementEffect(slideDirection, maxSlidingSpeed));
+      player.AddMovementEffect(new SlidingMovementEffect(slideDirection, maxSlidingSpeed));
     } else {
       isSliding = false;
       player.RemoveMovementEffect(typeof(SlidingMovementEffect));

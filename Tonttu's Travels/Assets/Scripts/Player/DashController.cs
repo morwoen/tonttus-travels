@@ -31,7 +31,7 @@ public class DashController : MonoBehaviour
 
     var isDashing = player.HasMovementEffect(typeof(DashMovementEffect));
     if (!isDashing) {
-      player.AddOverwritingMovementEffect(new DashMovementEffect(transform.forward * dashSpeed, dashDuration));
+      player.AddMovementEffect(new DashMovementEffect(transform.forward * dashSpeed, dashDuration));
       remainingDashCooldown = dashCooldown;
     }
   }

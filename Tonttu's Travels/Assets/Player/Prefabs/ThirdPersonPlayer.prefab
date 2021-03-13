@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 5138312835293641234}
   - component: {fileID: 4181289888966218429}
   - component: {fileID: 5257013932590729976}
+  - component: {fileID: 1283058158266014260}
   - component: {fileID: 4123197364554670635}
   m_Layer: 9
   m_Name: ThirdPersonPlayer
@@ -189,7 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a274045db542845a5c10d697679ece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSlidingSpeed: 20
+  maxSlidingSpeed: 15
 --- !u!114 &4181289888966218429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,8 +216,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310de7e7ed7fb5f4eae5870053c797f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 1
+  jumpForce: 0.7
   maxJumps: 2
+--- !u!114 &1283058158266014260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3795498423884485945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c69d32abd5a5d946b581d636890f231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4123197364554670635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,7 +258,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6792395061854620212}
+      - m_Target: {fileID: 1283058158266014260}
         m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:

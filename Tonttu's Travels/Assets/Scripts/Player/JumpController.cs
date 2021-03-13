@@ -6,11 +6,16 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerController))]
 public class JumpController : MonoBehaviour
 {
-  [SerializeField]
-  private float jumpForce = 1;
+  public float jumpForce = 1;
   [SerializeField]
   private int maxJumps = 1;
   private int jumpCount = 0;
+  
+  public bool doingJump {
+    get;
+    private set;
+  } = false;
+
   private PlayerController player;
   private SlidingController slidingController;
 
@@ -19,18 +24,28 @@ public class JumpController : MonoBehaviour
     slidingController = GetComponent<SlidingController>();
   }
 
-  void FixedUpdate() {
-    if (player.isGrounded) {
+  void Update() {
+    if (!doingJump && player.isGrounded) {
       jumpCount = 0;
+    }
+  }
+
+  public void DidJump() {
+    if (doingJump) {
+      jumpCount++;
+      doingJump = false;
     }
   }
 
   public void OnJump(InputAction.CallbackContext context) {
     if (context.ReadValueAsButton()) {
-      var isJumping = player.HasMovementEffect(typeof(JumpMovementEffect));
-      if (!isJumping && jumpCount < maxJumps) {
-        jumpCount++;
-        player.AddMovementEffect(new JumpMovementEffect(jumpForce));
+      if (!doingJump && jumpCount < maxJumps) {
+        doingJump = true;
+
+        // Have only 1 mid air jump if you walk off a platform
+        if (!player.isGrounded && jumpCount == 0) {
+          jumpCount++;
+        }
 
         if (slidingController?.isSliding == true) {
           // TODO: Add sliding effect/tell the sliding controller to stop

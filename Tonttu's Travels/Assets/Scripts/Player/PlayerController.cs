@@ -2,26 +2,27 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using FSM;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour {
 
   [Header("Movement")]
-  [SerializeField]
-  private float turnTime = 0.2f;
+  public float turnTime = 0.2f;
   [SerializeField]
   private float movementSpeed = 5;
-  private float currentSpeed;
-  private float turnSmoothVelocity;
-  private Vector2 movement = Vector2.zero;
-  private Vector3 movementDir;
-  private Transform cam;
 
+  private Vector3 movementDir;
+  private StateMachine fsm;
   private CharacterController cc;
   private SlidingController slidingController;
 
   private List<MovementEffect> movementEffects = new List<MovementEffect>();
-  private MovementEffect overwritingEffect;
+  public float currentSpeed
+  {
+    get;
+    private set;
+  }
 
   public bool isGrounded {
     get => cc.isGrounded && (slidingController?.isSliding != true);
@@ -41,22 +42,44 @@ public class PlayerController : MonoBehaviour {
     currentSpeed = movementSpeed;
     cc = GetComponent<CharacterController>();
     slidingController = GetComponent<SlidingController>();
-    cam = Camera.main.transform;
+
+    fsm = new StateMachine(this);
+
+    fsm.AddState("Movement", new MovementState(this));
+    fsm.AddState("Jumping", new JumpingState(this));
+
+    var jumpController = GetComponent<JumpController>();
+    fsm.AddTransition(new Transition(
+        "Movement",
+        "Jumping",
+        (transition) => jumpController.doingJump
+    ));
+
+    fsm.AddTransition(new Transition(
+        "Jumping",
+        "Movement",
+        (transition) => !jumpController.doingJump
+    ));
+
+    // This configures the entry point of the state machine
+    fsm.SetStartState("Movement");
+    // Initialises the state machine and must be called before OnLogic() is called
+    fsm.OnEnter();
   }
 
-  private void HandleMovement() {
-    float yVelocity = movementDir.y;
+  private void Update() {
+    fsm.OnUpdate();
 
-    if (overwritingEffect != null) {
-      movementDir = overwritingEffect.GetMovement(movementDir);
-    } else if (movement.magnitude > 0) {
-      float inputAngle = Mathf.Atan2(movement.x, movement.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
-      float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, inputAngle, ref turnSmoothVelocity, turnTime);
-      transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
-      movementDir = Quaternion.Euler(0.0f, inputAngle, 0.0f) * Vector3.forward * currentSpeed;
-    } else {
-      movementDir = Vector3.zero;
+    // Tick && clear the movement effects
+    foreach (var effect in movementEffects) {
+      effect.Tick();
     }
+
+    movementEffects.RemoveAll(effect => !effect.IsActive());
+  }
+
+  void FixedUpdate() {
+    float yVelocity = movementDir.y;
 
     if (isGrounded) {
       movementDir.y = 0.0f;
@@ -64,41 +87,30 @@ public class PlayerController : MonoBehaviour {
       movementDir.y = yVelocity;
     }
 
+    fsm.OnFixedUpdate();
+
     foreach (var effect in movementEffects) {
+      // execute all in priority overwriting or adding stuff
       movementDir += effect.GetMovement(movementDir);
     }
-  }
 
-  private void Update() {
-    // Tick && clear the movement effects
-    foreach (var effect in movementEffects) {
-      effect.Tick();
-    }
-
-    if (overwritingEffect != null) {
-      overwritingEffect.Tick();
-      if (!overwritingEffect.IsActive()) {
-        overwritingEffect = null;
-      }
-    }
-
-    movementEffects.RemoveAll(effect => !effect.IsActive());
-  }
-
-  void FixedUpdate() {
-    HandleMovement();
     cc.Move(movementDir * Time.fixedDeltaTime);
   }
 
-  public void OnMove(InputAction.CallbackContext context) {
-    movement = context.ReadValue<Vector2>().normalized;
+  public void AddMove(Vector3 movement) {
+    movementDir += movement;
+  }
+
+  public void SetMove(Vector3 movement, Vector3 axis) {
+    var keptMomentum = new Vector3(
+      axis.x == 1 ? 0 : movementDir.x,
+      axis.y == 1 ? 0 : movementDir.y,
+      axis.z == 1 ? 0 : movementDir.z
+    );
+    movementDir = movement + keptMomentum;
   }
 
   public bool HasMovementEffect(Type t) {
-    if (overwritingEffect != null && overwritingEffect.GetType() == t) {
-      return true;
-    }
-
     foreach (var effect in movementEffects) {
       if (effect.GetType() == t) {
         return true;
@@ -108,19 +120,11 @@ public class PlayerController : MonoBehaviour {
     return false;
   }
 
-  public void AddOverwritingMovementEffect(MovementEffect effect) {
-    overwritingEffect = effect;
-  }
-
   public void AddMovementEffect(MovementEffect effect) {
     movementEffects.Add(effect);
   }
 
   public void RemoveMovementEffect(Type effectType) {
-    if (overwritingEffect != null && overwritingEffect.GetType() == effectType) {
-      overwritingEffect = null;
-    }
-
     movementEffects.RemoveAll(effect => effect.GetType() == effectType);
   }
 }
