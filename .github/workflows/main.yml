@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         projectPath:
-          - Tonttu's Travels
+          - TonttusTravels
         unityVersion:
           - 2019.4.17f1
         targetPlatform:
