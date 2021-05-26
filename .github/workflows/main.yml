@@ -57,4 +57,5 @@ jobs:
         with:
           name: Build
           path: build
-      - run: "echo 'Project Version: ${{ steps.builder.outputs.buildVersion }}'"
+      - run: "echo 'Build target: demos/${{ github.repository }}/${{ steps.builder.outputs.buildVersion }}/${{ matrix.targetPlatform }}'"
+      - run: "echo 'Test Output target: tests/${{ github.repository }}/${{ steps.builder.outputs.buildVersion }}/${{ matrix.targetPlatform }}'"
