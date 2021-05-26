@@ -1,6 +1,12 @@
 name: Actions 😎
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
 
 jobs:
   buildAndTestForSomePlatforms:
@@ -25,6 +31,12 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+      - run: |
+          repo="${github_repo////-}"
+          echo $repo
+          echo "::set-env name=repo::$repo"
+        env:
+          github_repo: ${{ github.repository }}
       - uses: actions/cache@v2
         with:
           path: ${{ matrix.projectPath }}/Library
@@ -53,9 +65,14 @@ jobs:
           projectPath: ${{ matrix.projectPath }}
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Build
-          path: build
-      - run: "echo 'Build target: demos/${{ github.repository }}/${{ steps.builder.outputs.buildVersion }}/${{ matrix.targetPlatform }}'"
-      - run: "echo 'Test Output target: tests/${{ github.repository }}/${{ steps.builder.outputs.buildVersion }}/${{ matrix.targetPlatform }}'"
+      - run: "[ -f details.yml ] && cp details.yml build/"
+      - run: "[ -f thumbnail.png ] && cp thumbnail.png build/"
+      - uses: jakejarvis/s3-sync-action@master
+        if: ${{ github.ref == 'ref/head/main' }}
+        env:
+          AWS_S3_BUCKET: noxdew-games
+          AWS_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+          AWS_S3_ENDPOINT: ams3.digitaloceanspaces.com
+          SOURCE_DIR: 'build'
+          DEST_DIR: demos/$repo/${{ steps.builder.outputs.buildVersion }}/${{ matrix.targetPlatform }}

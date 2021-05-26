@@ -1,0 +1,45 @@
+name: Tonttu's Travels
+summary: Play as Tonttu! A norse house spirit who collects lost things and takes them back to his own dimension!
+description: >
+  This project was developed as a part of the 2021 Global Game Jam at Falmouth University! The theme for this year's Jam was "Lost and Found".
+
+  Play as Tonttu! A norse house spirit who collects lost things and takes them back to his own dimension! Ever wondered where that lost sock went? That key that fell down into the floorboards? Tonttu has taken it!
+
+  Jump, dash, sprint  and climb your way around this 3D Platformer to retrieve 5 lost items to reopen your portal and get back to your own dimension!
+  Avoid the Mares, malevolent spirits that will try to hinder your mission!
+
+  Items to Find:
+  - Ring
+  - Key
+  - Lighter
+  - Coin
+  - Quill
+
+  Get back to the portal with all 5 items to win!
+contributors:
+- name: Programming
+  people:
+  - Georgi Tsaklev
+  - Robertin Datkov
+  - Georgios Venios
+  - Alex Asenov
+- name: Design
+  people:
+  - Matthew Bailey
+  - Ben Nichols
+- name: Level Design
+  people:
+  - Matthew Bailey
+- name: 3D Art
+  people:
+  - Alex Parr
+  - Abigail John
+  - Ross Delaney
+  - Liam Williamson
+- name: 2D Art and UI Design
+  people:
+  - Casey O'Connor
+- name: Animation
+  people:
+  - Joseph James-Rikona
+  - Andrei Pantilie
