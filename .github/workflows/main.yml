@@ -21,7 +21,7 @@ jobs:
           - 2019.4.17f1
         targetPlatform:
           # - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
-          # - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
           # - StandaloneLinux64 # Build a Linux 64-bit standalone.
           # - iOS # Build an iOS player.
           # - Android # Build an Android player.
@@ -74,7 +74,7 @@ jobs:
         uses: canastro/copy-file-action@master
         with:
           source: portfolio/.
-          target: build
+          target: build/${{ matrix.targetPlatform }}
           flags: '-r'
       - name: Upload artifacts 🪄
         uses: jakejarvis/s3-sync-action@master
@@ -84,5 +84,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: https://ams3.digitaloceanspaces.com
-          SOURCE_DIR: 'build'
-          DEST_DIR: demos/${{ steps.repositoryName.outputs.value }}/${{ steps.builder.outputs.buildVersion }}/${{ matrix.targetPlatform }}
+          SOURCE_DIR: build/${{ matrix.targetPlatform }}
+          DEST_DIR: demos/${{ steps.repositoryName.outputs.value }}/${{ steps.builder.outputs.buildVersion }}
