@@ -71,16 +71,12 @@ jobs:
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
       - name: Zip Build 🗜️
-        uses: papeloto/action-zip@v1
         if: ${{ github.ref == 'refs/heads/main' && matrix.targetPlatform != 'WebGL' }}
-        with:
-          files: build/${{ matrix.targetPlatform }}
-          dest: build/${{ matrix.targetPlatform }}.zip
-          recursive: true
+        run: zip -r build/${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
       - name: Clean build files 🧹
         if: ${{ github.ref == 'refs/heads/main' && matrix.targetPlatform != 'WebGL' }}
         run: rm -rf build/${{ matrix.targetPlatform }}
-      - name: Copy ✂️
+      - name: Copy portfolio files 🗃️
         uses: canastro/copy-file-action@master
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
@@ -95,5 +91,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: https://ams3.digitaloceanspaces.com
-          SOURCE_DIR: build/${{ matrix.targetPlatform }}
+          SOURCE_DIR: build
           DEST_DIR: demos/${{ steps.repositoryName.outputs.value }}/${{ steps.builder.outputs.buildVersion }}
