@@ -80,7 +80,9 @@ jobs:
         run: sudo rm -rf build/${{ matrix.targetPlatform }}
       - name: Clean build files (WebGL) 🧹
         if: ${{ github.ref == 'refs/heads/main' && matrix.targetPlatform == 'WebGL' }}
-        run: sudo mv build/${{ matrix.targetPlatform }}/${{ matrix.targetPlatform }} build
+        run: |
+          sudo cp -r build/${{ matrix.targetPlatform }}/${{ matrix.targetPlatform }} build
+          sudo rm -rf build/${{ matrix.targetPlatform }}/${{ matrix.targetPlatform }}
       - name: Copy portfolio files 🗃️
         uses: canastro/copy-file-action@master
         if: ${{ github.ref == 'refs/heads/main' }}
