@@ -31,12 +31,13 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - run: |
-          repo="${github_repo////-}"
-          echo $repo
-          echo "::set-env name=repo::$repo"
-        env:
-          github_repo: ${{ github.repository }}
+      - name: Normalise repo name
+        id: repositoryName
+        uses: mad9000/actions-find-and-replace-string@2
+        with:
+          source: ${{ github.repository }}
+          find: '/'
+          replace: '-'
       - uses: actions/cache@v2
         with:
           path: ${{ matrix.projectPath }}/Library
@@ -75,4 +76,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: ams3.digitaloceanspaces.com
           SOURCE_DIR: 'build'
-          DEST_DIR: demos/$repo/${{ steps.builder.outputs.buildVersion }}/${{ matrix.targetPlatform }}
+          DEST_DIR: demos/${{ steps.repositoryName.outputs.value }}/${{ steps.builder.outputs.buildVersion }}/${{ matrix.targetPlatform }}
