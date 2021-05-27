@@ -31,21 +31,23 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - name: Normalise repo name
+      - name: Normalise repo name 🧶
         id: repositoryName
         uses: mad9000/actions-find-and-replace-string@2
         with:
           source: ${{ github.repository }}
           find: '/'
           replace: '-'
-      - uses: actions/cache@v2
+      - name: Cache 🧵
+        uses: actions/cache@v2
         with:
           path: ${{ matrix.projectPath }}/Library
           key: Library-${{ matrix.projectPath }}-${{ matrix.targetPlatform }}
           restore-keys: |
             Library-${{ matrix.projectPath }}-
             Library-
-      - uses: game-ci/unity-test-runner@v2
+      - name: Test 💥
+        uses: game-ci/unity-test-runner@v2
         id: testRunner
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -53,12 +55,14 @@ jobs:
           projectPath: ${{ matrix.projectPath }}
           unityVersion: ${{ matrix.unityVersion }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/upload-artifact@v2
+      - name: Upload test results 🪄
+        uses: actions/upload-artifact@v2
         if: always()
         with:
           name: Test results (all modes)
           path: ${{ steps.testRunner.outputs.artifactsPath }}
-      - uses: game-ci/unity-builder@v2
+      - name: Build 🧱
+        uses: game-ci/unity-builder@v2
         id: builder
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -66,9 +70,14 @@ jobs:
           projectPath: ${{ matrix.projectPath }}
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
-      - run: "[ -f details.yml ] && cp details.yml build/"
-      - run: "[ -f thumbnail.png ] && cp thumbnail.png build/"
-      - uses: jakejarvis/s3-sync-action@master
+      - name: Copy ✂️
+        uses: canastro/copy-file-action@master
+        with:
+          source: portfolio/.
+          target: build
+          flags: '-r'
+      - name: Upload artifacts 🪄
+        uses: jakejarvis/s3-sync-action@master
         if: ${{ github.ref == 'ref/head/main' }}
         env:
           AWS_S3_BUCKET: noxdew-games
