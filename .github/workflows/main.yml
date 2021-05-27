@@ -72,7 +72,7 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
       - name: Zip Build 🗜️
         if: ${{ github.ref == 'refs/heads/main' && matrix.targetPlatform != 'WebGL' }}
-        run: zip -r build/${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
+        run: sudo zip -r build/${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
       - name: Clean build files 🧹
         if: ${{ github.ref == 'refs/heads/main' && matrix.targetPlatform != 'WebGL' }}
         run: rm -rf build/${{ matrix.targetPlatform }}
