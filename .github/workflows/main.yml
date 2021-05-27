@@ -15,6 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        executableName:
+          - Tonttu's Travels
         projectPath:
           - TonttusTravels
         unityVersion:
@@ -72,10 +74,13 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
       - name: Zip Build 🗜️
         if: ${{ github.ref == 'refs/heads/main' && matrix.targetPlatform != 'WebGL' }}
-        run: sudo zip -r build/${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
-      - name: Clean build files 🧹
+        run: sudo zip -r "build/${{ matrix.targetPlatform }}/${{ matrix.executableName }}.zip" build/${{ matrix.targetPlatform }}
+      - name: Clean build files (Not WebGL) 🧹
         if: ${{ github.ref == 'refs/heads/main' && matrix.targetPlatform != 'WebGL' }}
         run: sudo rm -rf build/${{ matrix.targetPlatform }}
+      - name: Clean build files (WebGL) 🧹
+        if: ${{ github.ref == 'refs/heads/main' && matrix.targetPlatform == 'WebGL' }}
+        run: sudo mv build/${{ matrix.targetPlatform }}/${{ matrix.targetPlatform }} build/${{ matrix.targetPlatform }}
       - name: Copy portfolio files 🗃️
         uses: canastro/copy-file-action@master
         if: ${{ github.ref == 'refs/heads/main' }}
