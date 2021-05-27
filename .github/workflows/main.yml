@@ -1,4 +1,4 @@
-name: Actions 😎
+name: Build and publish 😎
 
 on:
   push:
@@ -75,7 +75,7 @@ jobs:
         run: sudo zip -r build/${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
       - name: Clean build files 🧹
         if: ${{ github.ref == 'refs/heads/main' && matrix.targetPlatform != 'WebGL' }}
-        run: rm -rf build/${{ matrix.targetPlatform }}
+        run: sudo rm -rf build/${{ matrix.targetPlatform }}
       - name: Copy portfolio files 🗃️
         uses: canastro/copy-file-action@master
         if: ${{ github.ref == 'refs/heads/main' }}
