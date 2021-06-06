@@ -9,11 +9,14 @@ description: |
   Avoid the Mares, malevolent spirits that will try to hinder your mission!
 
   Items to Find:
-  - ![Ring image;50x50](images/ring.png) Ring
-  - ![Key image;50x50](images/key.png) Key
-  - ![Lighter image;50x50](images/lighter.png) Lighter
-  - ![Coin image;50x50](images/coin.png) Coin
-  - ![Quill image;50x50](images/quill.png) Quill
+  
+  | | |
+  | :-: | :- |
+  |![Ring image; x50](images/ring.png) | Ring |
+  |![Key image; x50](images/key.png) | Key |
+  |![Lighter image; x50](images/lighter.png) | Lighter |
+  |![Coin image; x50](images/coin.png) | Coin |
+  |![Quill image; x50](images/quill.png) | Quill |
 
   Get back to the portal with all 5 items to win!
 contributors:
